@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -35,9 +36,6 @@ public class MainScreen implements Screen {
         this.game = game;
     }
 
-    /**
-     * Called when this screen becomes the current screen for a {@link Game}.
-     */
     @Override
     public void show() {
         stage = new Stage();
@@ -54,24 +52,26 @@ public class MainScreen implements Screen {
         ImageTextButton.ImageTextButtonStyle style = new ImageTextButton.ImageTextButtonStyle();
         style.font = new BitmapFont(Gdx.files.internal("font.fnt"));
         style.up = buttonDrawable;
-        ImageTextButton button = new ImageTextButton("Hello", style);
+        ImageTextButton button = new ImageTextButton("HELLO", style);
         button.setPosition(100, 100);
-        button.getLabel().setFontScale(1.5f);
-
+        button.getLabel().setFontScale(1.2f);
+        button.getLabel().setColor(1, 0, 0, 1);
+        button.addListener(new ClickListener() {
+            @Override
+            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+                game.setScreen(new GameScreen(game));
+            }
+        });
         stage.addActor(button);
     }
 
-    /**
-     * Called when the screen should render itself.
-     *
-     * @param delta The time in seconds since the last render.
-     */
+
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT |
                 GL20.GL_DEPTH_BUFFER_BIT |
                 (Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
-
+        Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
 
         camera.update();
         batch.setProjectionMatrix(camera.combined);
@@ -79,43 +79,30 @@ public class MainScreen implements Screen {
 
     }
 
-    /**
-     * @param width
-     * @param height
-     * @see ApplicationListener#resize(int, int)
-     */
+
     @Override
     public void resize(int width, int height) {
 
     }
 
-    /**
-     * @see ApplicationListener#pause()
-     */
+
     @Override
     public void pause() {
 
     }
 
-    /**
-     * @see ApplicationListener#resume()
-     */
+
     @Override
     public void resume() {
 
     }
 
-    /**
-     * Called when this screen is no longer the current screen for a {@link Game}.
-     */
+
     @Override
     public void hide() {
 
     }
 
-    /**
-     * Called when this screen should release all resources.
-     */
     @Override
     public void dispose() {
         batch.dispose();

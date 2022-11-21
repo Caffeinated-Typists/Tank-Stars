@@ -37,7 +37,6 @@ public class GameScreen implements Screen {
     World world;
     Box2DDebugRenderer debugRenderer;
     float accumulator = 0;
-    Body ground;
     Body tank1;
     Body tank2;
 
@@ -59,17 +58,9 @@ public class GameScreen implements Screen {
 
         debugRenderer = new Box2DDebugRenderer();
 
-        BodyDef groundDef = new BodyDef();
-        groundDef.type = BodyDef.BodyType.StaticBody;
-        FixtureDef groundFixture = new FixtureDef();
-        groundFixture.friction = 0.5f;
-        PolygonShape groundShape = new PolygonShape();
-        groundShape.setAsBox((float)1, (float)0.02);  // Change this numbers to make some more sense
-        groundFixture.shape = groundShape;
-        ground = world.createBody(groundDef);
-        ground.createFixture(groundFixture);
-        ground.setTransform(0, (float)-1, 0);
-        groundShape.dispose();
+        for(float i = -1; i <= 1; i += 0.05){
+            createGroundColumn(i, (float)i*i);
+        }
 
         BodyDef tank1Def = new BodyDef();
         tank1Def.type = BodyDef.BodyType.DynamicBody;
@@ -80,8 +71,8 @@ public class GameScreen implements Screen {
         FixtureDef tank1Fixture = new FixtureDef();
         tank1Fixture.shape = tank1Shape;
         tank1Fixture.density = 1;
-        tank1Fixture.friction = 0.5f;
-        tank1Fixture.restitution = 0.3f;
+        tank1Fixture.friction = 1f;
+        tank1Fixture.restitution = 0f;
         tank1.createFixture(tank1Fixture);
         tank1Shape.dispose();
 
@@ -94,10 +85,35 @@ public class GameScreen implements Screen {
         FixtureDef tank2Fixture = new FixtureDef();
         tank2Fixture.shape = tank1Shape;
         tank2Fixture.density = 1;
-        tank2Fixture.friction = 0.5f;
-        tank2Fixture.restitution = 0.3f;
+        tank2Fixture.friction = 1f;
+        tank2Fixture.restitution = 0f;
         tank2.createFixture(tank2Fixture);
         tank2Shape.dispose();
+    }
+
+    private void createGroundColumn(float x, float y){
+//        BodyDef groundDef = new BodyDef();
+//        groundDef.type = BodyDef.BodyType.StaticBody;
+//        FixtureDef groundFixture = new FixtureDef();
+//        groundFixture.friction = 0.5f;
+//        PolygonShape groundShape = new PolygonShape();
+//        groundShape.setAsBox((float)x, (float)y);  // Change this numbers to make some more sense
+//        groundFixture.shape = groundShape;
+//        Body groundCol = world.createBody(groundDef);
+//        groundCol.createFixture(groundFixture);
+//        groundCol.setTransform(0, (float)-1, 0);
+//        groundShape.dispose();
+        BodyDef groundColDef = new BodyDef();
+        groundColDef.type = BodyDef.BodyType.StaticBody;
+        groundColDef.position.set(x, y - 1);
+        Body groundCol = world.createBody(groundColDef);
+        FixtureDef groundColFixture = new FixtureDef();
+        groundColFixture.friction = 1f;
+        PolygonShape groundColShape = new PolygonShape();
+        groundColShape.setAsBox((float)0.05, (float)0.05);
+        groundColFixture.shape = groundColShape;
+        groundCol.createFixture(groundColFixture);
+        groundColShape.dispose();
     }
 
     @Override
@@ -138,6 +154,9 @@ public class GameScreen implements Screen {
         //health bars
         batch.draw(healthBarL, TankStars.WIDTH/2f - healthBarL.getWidth() - 50, TankStars.HEIGHT - 10 - healthBarL.getHeight(), healthBarL.getWidth(), healthBarL.getHeight());
         batch.draw(healthBarR, TankStars.WIDTH/2f + 50, TankStars.HEIGHT - 10 - healthBarR.getHeight(), healthBarR.getWidth(), healthBarR.getHeight());
+
+        // Ground
+
 
         // tanks
         tank1Sprite.setPosition(Gdx.graphics.getWidth()/2 + tank1.getPosition().x*(Gdx.graphics.getWidth()/2) - 90, Gdx.graphics.getHeight()/2 + tank1.getPosition().y*(Gdx.graphics.getHeight()/2) - 35);

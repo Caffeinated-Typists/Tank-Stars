@@ -8,7 +8,7 @@ import com.ctypists.tankstars.TankStars;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-		config.setWindowedMode(1120, 630);
+		config.setWindowedMode(1344, 621);
 		config.setForegroundFPS(60);
 		config.setTitle("TankStars");
 		config.setBackBufferConfig(8,8,8,8,16,0, 10);

@@ -19,7 +19,7 @@ public class ButtonGenerator {
     ImageTextButtonStyle mystyle;
     BitmapFont font;
 
-    public ImageTextButton createButton(String text){
+    public ImageTextButton createButton(String text, String texture){
         image = new Texture(Gdx.files.internal("box.png"));
         imageDrawable = new TextureRegionDrawable(new TextureRegion(image));
         font = new BitmapFont(Gdx.files.internal("font.fnt"));
@@ -30,12 +30,17 @@ public class ButtonGenerator {
         return new ImageTextButton(text, mystyle);
     }
 
+    public ImageTextButton createButton(String text) {
+        return createButton(text, "box.png");
 
-    public void setNextScreen(ImageTextButton button, Screen screen, final Game game){
+    }
+
+
+    public void setNextScreen(ImageTextButton button, final Screen screen, final Game game){
         button.addListener(new ClickListener(){
         @Override
         public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-            game.setScreen(new GameScreen(game));
+            game.setScreen(screen);
             }
         });
     }

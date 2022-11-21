@@ -48,14 +48,14 @@ public class MainScreen implements Screen {
 
         // new game
         ImageTextButton new_game = buttongen.createButton("NEW");
-        buttongen.setNextScreen(new_game, new GameScreen((game)), game);
+        buttongen.setNextScreen(new_game, new TankMenu(game, this), game);
         new_game.setPosition((TankStars.WIDTH / 2f) - new_game.getWidth() / 2, TankStars.HEIGHT/ 2f);
         new_game.getLabel().setFontScale(1f);
         new_game.getLabel().setColor(1, 0, 0, 1);
 
         // load game
         ImageTextButton load_game = buttongen.createButton("LOAD");
-        buttongen.setNextScreen(load_game, new GameScreen(game), game);
+        buttongen.setNextScreen(load_game, new TankMenu(game, this), game);
         load_game.setPosition(TankStars.WIDTH / 2f - load_game.getWidth() / 2f, TankStars.HEIGHT / 2f - load_game.getWidth()/ 2);
 
 

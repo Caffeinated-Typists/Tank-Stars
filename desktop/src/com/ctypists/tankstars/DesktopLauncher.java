@@ -11,7 +11,7 @@ public class DesktopLauncher {
 		config.setWindowedMode(1344, 621);
 		config.setForegroundFPS(60);
 		config.setTitle("TankStars");
-		config.setBackBufferConfig(8,8,8,8,16,0, 10);
+		config.setBackBufferConfig(8,8,8,8,16,0, 5);
 		config.setResizable(false);
 
 		new Lwjgl3Application(new TankStars(), config);

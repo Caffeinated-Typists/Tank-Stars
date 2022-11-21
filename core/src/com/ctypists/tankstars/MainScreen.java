@@ -33,7 +33,7 @@ public class MainScreen implements Screen {
 
     @Override
     public void show() {
-        stage = new Stage();
+            stage = new Stage();
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
         viewport = new FitViewport(TankStars.WIDTH, TankStars.HEIGHT, camera);

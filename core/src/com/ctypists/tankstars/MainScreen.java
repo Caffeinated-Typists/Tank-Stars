@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class MainScreen implements Screen {
@@ -22,9 +21,9 @@ public class MainScreen implements Screen {
     OrthographicCamera camera;
     FitViewport viewport;
     SpriteBatch batch;
-    Stage stage;
+    Stage mainStage;
     AssetManager manager;
-    Texture background;
+    Texture mainBackground;
     Sprite backgroundSprite;
 
     public MainScreen(Game game) {
@@ -33,16 +32,17 @@ public class MainScreen implements Screen {
 
     @Override
     public void show() {
-            stage = new Stage();
+        mainStage = new Stage();
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
         viewport = new FitViewport(TankStars.WIDTH, TankStars.HEIGHT, camera);
-        stage = new Stage(viewport, batch);
-        Gdx.input.setInputProcessor(stage);
+        mainStage = new Stage(viewport, batch);
+        Gdx.input.setInputProcessor(mainStage);
         camera.setToOrtho(false, TankStars.WIDTH, TankStars.HEIGHT);
 
-        background = new Texture(Gdx.files.internal("mainScreenBackground.png"));
-        backgroundSprite = new Sprite(background);
+        mainBackground = new Texture(Gdx.files.internal("mainScreenBackground.png"));
+        mainBackground.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        backgroundSprite = new Sprite(mainBackground);
 
         ButtonGenerator buttongen = new ButtonGenerator();
 
@@ -70,9 +70,9 @@ public class MainScreen implements Screen {
             }
         });
 
-        stage.addActor(exit_game);
-        stage.addActor(load_game);
-        stage.addActor(new_game);
+        mainStage.addActor(exit_game);
+        mainStage.addActor(load_game);
+        mainStage.addActor(new_game);
     }
 
 
@@ -86,8 +86,8 @@ public class MainScreen implements Screen {
         camera.update();
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());batch.end();
-        stage.draw();
+        batch.draw(mainBackground, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());batch.end();
+        mainStage.draw();
 
     }
 

@@ -11,8 +11,8 @@ public class TankStars extends Game {
 	/**
 	 * Called when the {@link Application} is first created.
 	 */
-	public static final int WIDTH = 800;
-	public static final int HEIGHT = 600;
+	public static final int WIDTH = 1120;
+	public static final int HEIGHT = 630;
 
 
 	@Override

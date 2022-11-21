@@ -7,14 +7,10 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 public class MainScreen implements Screen {
@@ -25,6 +21,8 @@ public class MainScreen implements Screen {
     SpriteBatch batch;
     Stage stage;
     AssetManager manager;
+    Texture background;
+    Sprite backgroundSprite;
 
     public MainScreen(Game game) {
         this.game = game;
@@ -40,22 +38,21 @@ public class MainScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
         camera.setToOrtho(false, TankStars.WIDTH, TankStars.HEIGHT);
 
+        background = new Texture(Gdx.files.internal("mainScreenBackground.png"));
+        backgroundSprite = new Sprite(background);
 
-        Texture buttonTexture = new Texture((Gdx.files.internal("box.png")));
-        Drawable buttonDrawable = new TextureRegionDrawable(new TextureRegion(buttonTexture));
-        ImageTextButton.ImageTextButtonStyle style = new ImageTextButton.ImageTextButtonStyle();
-        style.font = new BitmapFont(Gdx.files.internal("font.fnt"));
-        style.up = buttonDrawable;
-        ImageTextButton button = new ImageTextButton("HELLO", style);
-        button.setPosition(100, 100);
-        button.getLabel().setFontScale(1.2f);
+        ButtonGenerator buttongen = new ButtonGenerator();
+        ImageTextButton button = buttongen.createButton("NEW GAME");
+        buttongen.setNextScreen(button, new GameScreen((game)), game);
+        button.setPosition((TankStars.WIDTH / 2f) - button.getWidth() / 2, TankStars.HEIGHT/ 2f - button.getWidth() / 2);
+        button.getLabel().setFontScale(1f);
         button.getLabel().setColor(1, 0, 0, 1);
-        button.addListener(new ClickListener() {
-            @Override
-            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-                game.setScreen(new GameScreen(game));
-            }
-        });
+//        button.addListener(new ClickListener() {
+//            @Override
+//            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+//                game.setScreen(new GameScreen(game));
+//            }
+//        });
         stage.addActor(button);
     }
 
@@ -69,6 +66,10 @@ public class MainScreen implements Screen {
 
         camera.update();
         batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+        batch.draw(background, 0, 0);
+        backgroundSprite.draw(batch);
+        batch.end();
         stage.draw();
 
     }

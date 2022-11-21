@@ -8,9 +8,12 @@ import com.ctypists.tankstars.TankStars;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+//		config.setWindowSizeLimits(1120, 630, 1120, 630);
 		config.setForegroundFPS(60);
 		config.setTitle("TankStars");
-		config.setBackBufferConfig(8,8,8,8,16,0, 4);
+		config.setBackBufferConfig(8,8,8,8,16,0, 10);
+		config.setResizable(false);
+
 		new Lwjgl3Application(new TankStars(), config);
 	}
 }

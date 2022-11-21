@@ -50,6 +50,7 @@ public class GameScreen implements Screen {
 
         Texture tank1Texture = new Texture(Gdx.files.internal("tank1.png"));
         tank1Sprite = new Sprite(tank1Texture);
+        tank1Sprite.flip(true, false);
         Texture tank2Texture = new Texture(Gdx.files.internal("tank2.png"));
         tank2Sprite = new Sprite(tank2Texture);
 
@@ -139,7 +140,7 @@ public class GameScreen implements Screen {
         batch.draw(healthBarR, TankStars.WIDTH/2f + 50, TankStars.HEIGHT - 10 - healthBarR.getHeight(), healthBarR.getWidth(), healthBarR.getHeight());
 
         // tanks
-        tank1Sprite.setPosition(Gdx.graphics.getWidth()/2 + tank1.getPosition().x*(Gdx.graphics.getWidth()/2) - 60, Gdx.graphics.getHeight()/2 + tank1.getPosition().y*(Gdx.graphics.getHeight()/2) - 35);
+        tank1Sprite.setPosition(Gdx.graphics.getWidth()/2 + tank1.getPosition().x*(Gdx.graphics.getWidth()/2) - 90, Gdx.graphics.getHeight()/2 + tank1.getPosition().y*(Gdx.graphics.getHeight()/2) - 35);
         tank1Sprite.setRotation((float)Math.toDegrees(tank1.getAngle()));
         tank1Sprite.draw(batch);
 

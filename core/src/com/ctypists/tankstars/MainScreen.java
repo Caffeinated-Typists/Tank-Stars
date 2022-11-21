@@ -9,15 +9,18 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class MainScreen implements Screen {
 
     Game game;
     OrthographicCamera camera;
-    ExtendViewport viewport;
+    FitViewport viewport;
     SpriteBatch batch;
     Stage stage;
     AssetManager manager;
@@ -33,7 +36,7 @@ public class MainScreen implements Screen {
         stage = new Stage();
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
-        viewport = new ExtendViewport(TankStars.WIDTH, TankStars.HEIGHT, camera);
+        viewport = new FitViewport(TankStars.WIDTH, TankStars.HEIGHT, camera);
         stage = new Stage(viewport, batch);
         Gdx.input.setInputProcessor(stage);
         camera.setToOrtho(false, TankStars.WIDTH, TankStars.HEIGHT);
@@ -42,18 +45,34 @@ public class MainScreen implements Screen {
         backgroundSprite = new Sprite(background);
 
         ButtonGenerator buttongen = new ButtonGenerator();
-        ImageTextButton button = buttongen.createButton("NEW GAME");
-        buttongen.setNextScreen(button, new GameScreen((game)), game);
-        button.setPosition((TankStars.WIDTH / 2f) - button.getWidth() / 2, TankStars.HEIGHT/ 2f - button.getWidth() / 2);
-        button.getLabel().setFontScale(1f);
-        button.getLabel().setColor(1, 0, 0, 1);
-//        button.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-//                game.setScreen(new GameScreen(game));
-//            }
-//        });
-        stage.addActor(button);
+
+        // new game
+        ImageTextButton new_game = buttongen.createButton("NEW");
+        buttongen.setNextScreen(new_game, new GameScreen((game)), game);
+        new_game.setPosition((TankStars.WIDTH / 2f) - new_game.getWidth() / 2, TankStars.HEIGHT/ 2f);
+        new_game.getLabel().setFontScale(1f);
+        new_game.getLabel().setColor(1, 0, 0, 1);
+
+        // load game
+        ImageTextButton load_game = buttongen.createButton("LOAD");
+        buttongen.setNextScreen(load_game, new GameScreen(game), game);
+        load_game.setPosition(TankStars.WIDTH / 2f - load_game.getWidth() / 2f, TankStars.HEIGHT / 2f - load_game.getWidth()/ 2);
+
+
+        // exit game
+        ImageTextButton exit_game = buttongen.createButton("EXIT");
+        exit_game.setPosition(TankStars.WIDTH / 2f - load_game.getWidth() / 2f, TankStars.HEIGHT / 2f - load_game.getWidth());
+        exit_game.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.exit();
+                System.exit(0);
+            }
+        });
+
+        stage.addActor(exit_game);
+        stage.addActor(load_game);
+        stage.addActor(new_game);
     }
 
 
@@ -67,9 +86,7 @@ public class MainScreen implements Screen {
         camera.update();
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        batch.draw(background, 0, 0);
-        backgroundSprite.draw(batch);
-        batch.end();
+        batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());batch.end();
         stage.draw();
 
     }

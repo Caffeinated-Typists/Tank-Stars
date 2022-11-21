@@ -17,6 +17,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
+import java.util.ArrayList;
+
 public class GameScreen implements Screen {
     static final float STEP_TIME = 1f / 60f;
     static final int VELOCITY_ITERATIONS = 6;
@@ -25,6 +27,7 @@ public class GameScreen implements Screen {
     Game game;
     SpriteBatch batch;
     Texture gamebackground;
+    Texture ground;
     OrthographicCamera camera;
     ExtendViewport viewport;
     Stage gameStage;
@@ -39,6 +42,7 @@ public class GameScreen implements Screen {
     float accumulator = 0;
     Body tank1;
     Body tank2;
+    ArrayList<Body> groundCols;
 
     public GameScreen(Game game) {
         this.game = game;
@@ -60,6 +64,7 @@ public class GameScreen implements Screen {
 
         debugRenderer = new Box2DDebugRenderer();
 
+        groundCols = new ArrayList<Body>();
         for(float i = -1; i <= 1; i += 0.01){
             createGroundColumn(i, (float)0.3 + (float)0.05 * (float)Math.sin(i * 10));
 //            createGroundColumn(i, (float)0.3);
@@ -67,7 +72,7 @@ public class GameScreen implements Screen {
 
         BodyDef tank1Def = new BodyDef();
         tank1Def.type = BodyDef.BodyType.DynamicBody;
-        tank1Def.position.set((float)0.35, (float)0.1);
+        tank1Def.position.set((float)0.45, (float)0.1);
         tank1 = world.createBody(tank1Def);
         PolygonShape tank1Shape = new PolygonShape();
         tank1Shape.setAsBox((float)0.02, (float)0.04);
@@ -81,7 +86,7 @@ public class GameScreen implements Screen {
 
         BodyDef tank2Def = new BodyDef();
         tank2Def.type = BodyDef.BodyType.DynamicBody;
-        tank2Def.position.set((float)-0.35, (float)0.1);
+        tank2Def.position.set((float)-0.45, (float)0.1);
         tank2 = world.createBody(tank2Def);
         PolygonShape tank2Shape = new PolygonShape();
         tank2Shape.setAsBox((float)0.02, (float)0.04);
@@ -105,6 +110,7 @@ public class GameScreen implements Screen {
         groundColShape.setAsBox((float)0.005, (float)y);
         groundColFixture.shape = groundColShape;
         groundCol.createFixture(groundColFixture);
+        groundCols.add(groundCol);
         groundColShape.dispose();
     }
 
@@ -114,6 +120,7 @@ public class GameScreen implements Screen {
         gamebackground = new Texture(Gdx.files.internal("gameBackground.png"));
         healthBarL = new Texture(Gdx.files.internal("HealthBarL.png"));
         healthBarR = new Texture(Gdx.files.internal("HealthBarR.png"));
+        ground = new Texture(Gdx.files.internal("ground.png"));
         gamebackground.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
 //        settingsWindow = new Windo/w("Settings", gameStage.getSkin());
@@ -148,7 +155,13 @@ public class GameScreen implements Screen {
         batch.draw(healthBarR, TankStars.WIDTH/2f + 50, TankStars.HEIGHT - 10 - healthBarR.getHeight(), healthBarR.getWidth(), healthBarR.getHeight());
 
         // Ground
-
+        for(Body groundCol : groundCols){
+            Vector2 pos = groundCol.getPosition();
+            float width = 6;
+//            float height = groundCol.getFixtureList().get(0).getShape().ge
+            float height = 115;
+            batch.draw(ground, Gdx.graphics.getWidth()/2 + pos.x*(Gdx.graphics.getWidth()/2), Gdx.graphics.getHeight()/2 + pos.y*505, width*2, height*2);
+        }
 
         // tanks
         tank1Sprite.setPosition(Gdx.graphics.getWidth()/2 + tank1.getPosition().x*(Gdx.graphics.getWidth()/2) - 90, Gdx.graphics.getHeight()/2 + tank1.getPosition().y*(Gdx.graphics.getHeight()/2) - 45);

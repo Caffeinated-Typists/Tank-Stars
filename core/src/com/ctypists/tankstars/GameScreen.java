@@ -47,19 +47,22 @@ public class GameScreen implements Screen {
         camera = new OrthographicCamera();
         viewport = new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
 
-        Texture tank1Texture = new Texture(Gdx.files.internal("tank1.png"));
+        Texture tank1Texture = new Texture(Gdx.files.internal("TankTexture1.png"));
         tank1Sprite = new Sprite(tank1Texture);
+        tank1Sprite.setScale(0.4f);
         tank1Sprite.flip(true, false);
-        Texture tank2Texture = new Texture(Gdx.files.internal("tank2.png"));
+        Texture tank2Texture = new Texture(Gdx.files.internal("TankTexture2.png"));
         tank2Sprite = new Sprite(tank2Texture);
+        tank2Sprite.setScale(0.4f);
 
         Box2D.init();
         world = new World(new Vector2(0, -9.81f), true);
 
         debugRenderer = new Box2DDebugRenderer();
 
-        for(float i = -1; i <= 1; i += 0.05){
-            createGroundColumn(i, (float)i*i);
+        for(float i = -1; i <= 1; i += 0.01){
+            createGroundColumn(i, (float)0.3 + (float)0.05 * (float)Math.sin(i * 10));
+//            createGroundColumn(i, (float)0.3);
         }
 
         BodyDef tank1Def = new BodyDef();
@@ -67,12 +70,12 @@ public class GameScreen implements Screen {
         tank1Def.position.set((float)0.35, (float)0.1);
         tank1 = world.createBody(tank1Def);
         PolygonShape tank1Shape = new PolygonShape();
-        tank1Shape.setAsBox((float)0.05, (float)0.1);
+        tank1Shape.setAsBox((float)0.02, (float)0.04);
         FixtureDef tank1Fixture = new FixtureDef();
         tank1Fixture.shape = tank1Shape;
         tank1Fixture.density = 1;
         tank1Fixture.friction = 1f;
-        tank1Fixture.restitution = 0f;
+        tank1Fixture.restitution = -1f;
         tank1.createFixture(tank1Fixture);
         tank1Shape.dispose();
 
@@ -81,28 +84,17 @@ public class GameScreen implements Screen {
         tank2Def.position.set((float)-0.35, (float)0.1);
         tank2 = world.createBody(tank2Def);
         PolygonShape tank2Shape = new PolygonShape();
-        tank2Shape.setAsBox((float)0.05, (float)0.1);
+        tank2Shape.setAsBox((float)0.02, (float)0.04);
         FixtureDef tank2Fixture = new FixtureDef();
         tank2Fixture.shape = tank1Shape;
         tank2Fixture.density = 1;
         tank2Fixture.friction = 1f;
-        tank2Fixture.restitution = 0f;
+        tank2Fixture.restitution = -1f;
         tank2.createFixture(tank2Fixture);
         tank2Shape.dispose();
     }
 
     private void createGroundColumn(float x, float y){
-//        BodyDef groundDef = new BodyDef();
-//        groundDef.type = BodyDef.BodyType.StaticBody;
-//        FixtureDef groundFixture = new FixtureDef();
-//        groundFixture.friction = 0.5f;
-//        PolygonShape groundShape = new PolygonShape();
-//        groundShape.setAsBox((float)x, (float)y);  // Change this numbers to make some more sense
-//        groundFixture.shape = groundShape;
-//        Body groundCol = world.createBody(groundDef);
-//        groundCol.createFixture(groundFixture);
-//        groundCol.setTransform(0, (float)-1, 0);
-//        groundShape.dispose();
         BodyDef groundColDef = new BodyDef();
         groundColDef.type = BodyDef.BodyType.StaticBody;
         groundColDef.position.set(x, y - 1);
@@ -110,7 +102,7 @@ public class GameScreen implements Screen {
         FixtureDef groundColFixture = new FixtureDef();
         groundColFixture.friction = 1f;
         PolygonShape groundColShape = new PolygonShape();
-        groundColShape.setAsBox((float)0.05, (float)0.05);
+        groundColShape.setAsBox((float)0.005, (float)y);
         groundColFixture.shape = groundColShape;
         groundCol.createFixture(groundColFixture);
         groundColShape.dispose();
@@ -159,18 +151,18 @@ public class GameScreen implements Screen {
 
 
         // tanks
-        tank1Sprite.setPosition(Gdx.graphics.getWidth()/2 + tank1.getPosition().x*(Gdx.graphics.getWidth()/2) - 90, Gdx.graphics.getHeight()/2 + tank1.getPosition().y*(Gdx.graphics.getHeight()/2) - 35);
+        tank1Sprite.setPosition(Gdx.graphics.getWidth()/2 + tank1.getPosition().x*(Gdx.graphics.getWidth()/2) - 90, Gdx.graphics.getHeight()/2 + tank1.getPosition().y*(Gdx.graphics.getHeight()/2) - 45);
         tank1Sprite.setRotation((float)Math.toDegrees(tank1.getAngle()));
         tank1Sprite.draw(batch);
 
-        tank2Sprite.setPosition(Gdx.graphics.getWidth()/2 + tank2.getPosition().x*(Gdx.graphics.getWidth()/2) - 70, Gdx.graphics.getHeight()/2 + tank2.getPosition().y*(Gdx.graphics.getHeight()/2) - 40);
+        tank2Sprite.setPosition(Gdx.graphics.getWidth()/2 + tank2.getPosition().x*(Gdx.graphics.getWidth()/2) - 90, Gdx.graphics.getHeight()/2 + tank2.getPosition().y*(Gdx.graphics.getHeight()/2) - 50);
         tank2Sprite.setRotation((float)Math.toDegrees(tank2.getAngle()));
         tank2Sprite.draw(batch);
 
         batch.end();
 
 //        Comment or uncomment this line to see the polygons
-        debugRenderer.render(world, camera.combined);
+//        debugRenderer.render(world, camera.combined);
 
     }
 

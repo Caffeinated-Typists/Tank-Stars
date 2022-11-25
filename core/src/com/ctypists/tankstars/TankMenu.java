@@ -71,10 +71,9 @@ public class TankMenu implements Screen {
         buttongen.setNextScreen(playButton, new GameScreen(game), game);
         buttongen.setNextScreen(backButton, mainScreen, game);
 
-        PauseMenu pauseMenu = new PauseMenu();
         menuStage.addActor(playButton);
         menuStage.addActor(backButton);
-        menuStage.addActor(pauseMenu);
+//        menuStage.addActor(pauseMenu);
 
     }
 

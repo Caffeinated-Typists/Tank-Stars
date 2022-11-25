@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import org.w3c.dom.Text;
 
 public class TankMenu implements Screen {
@@ -26,6 +28,8 @@ public class TankMenu implements Screen {
     ImageTextButton playButton, backButton;
     MainScreen mainScreen;
     PauseMenu pauseMenu;
+    OrthographicCamera camera;
+    ExtendViewport viewport;
 
     public TankMenu(Game game, MainScreen mainScreen) {
         this.game = game;
@@ -36,8 +40,10 @@ public class TankMenu implements Screen {
 
     @Override
     public void show() {
+        camera = new OrthographicCamera();
+        viewport = new ExtendViewport(TankStars.WIDTH, TankStars.HEIGHT, camera);
         menuBatch = new SpriteBatch();
-        menuStage = new Stage();
+        menuStage = new Stage(viewport, menuBatch);
         buttongen = new ButtonGenerator();
         Gdx.input.setInputProcessor(menuStage);
         tank1 = new Texture(Gdx.files.internal("Tank1.png"));
@@ -112,7 +118,7 @@ public class TankMenu implements Screen {
 
     @Override
     public void dispose() {
-
+        menuStage.dispose();
     }
 }
 

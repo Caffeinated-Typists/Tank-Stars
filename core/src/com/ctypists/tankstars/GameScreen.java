@@ -56,7 +56,7 @@ public class GameScreen implements Screen {
         camera = new OrthographicCamera();
         viewport = new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
         gameStage = new Stage(viewport, batch);
-//        Gdx.input.setInputProcessor(gameStage);
+
 
         Texture tank1Texture = new Texture(Gdx.files.internal("TankTexture1.png"));
         tank1Texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
@@ -155,7 +155,7 @@ public class GameScreen implements Screen {
         healthBarL.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         healthBarR.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         ground.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-
+        Gdx.input.setInputProcessor(gameStage);
 
 //        settingsWindow = new Windo/w("Settings", gameStage.getSkin());
 
@@ -246,6 +246,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        gameStage.dispose();
     }
 }

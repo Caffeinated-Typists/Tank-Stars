@@ -52,10 +52,12 @@ public class GameScreen implements Screen {
         viewport = new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
 
         Texture tank1Texture = new Texture(Gdx.files.internal("TankTexture1.png"));
+        tank1Texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         tank1Sprite = new Sprite(tank1Texture);
         tank1Sprite.setScale(0.4f);
         tank1Sprite.flip(true, false);
         Texture tank2Texture = new Texture(Gdx.files.internal("TankTexture2.png"));
+        tank2Texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         tank2Sprite = new Sprite(tank2Texture);
         tank2Sprite.setScale(0.4f);
 
@@ -122,6 +124,9 @@ public class GameScreen implements Screen {
         healthBarR = new Texture(Gdx.files.internal("HealthBarR.png"));
         ground = new Texture(Gdx.files.internal("ground.png"));
         gamebackground.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        healthBarL.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        healthBarR.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        ground.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
 //        settingsWindow = new Windo/w("Settings", gameStage.getSkin());
 
@@ -175,7 +180,7 @@ public class GameScreen implements Screen {
         batch.end();
 
 //        Comment or uncomment this line to see the polygons
-//        debugRenderer.render(world, camera.combined);
+        debugRenderer.render(world, camera.combined);
 
     }
 

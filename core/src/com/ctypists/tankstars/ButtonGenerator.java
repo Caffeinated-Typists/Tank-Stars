@@ -21,8 +21,10 @@ public class ButtonGenerator {
 
     public ImageTextButton createButton(String text, String texture){
         image = new Texture(Gdx.files.internal("box.png"));
+        image.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         imageDrawable = new TextureRegionDrawable(new TextureRegion(image));
         font = new BitmapFont(Gdx.files.internal("font.fnt"));
+        font.setColor(1, 1, 1, 1);
 //        font = new BitmapFont();
         mystyle = new ImageTextButtonStyle();
         mystyle.font = font;

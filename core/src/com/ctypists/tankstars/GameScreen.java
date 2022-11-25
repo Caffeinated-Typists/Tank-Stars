@@ -45,6 +45,7 @@ public class GameScreen implements Screen {
     Body tank1;
     Body tank2;
     ArrayList<Body> groundCols;
+    ArrayList<Float> groundHeights;
 
     public GameScreen(Game game) {
         this.game = game;
@@ -70,39 +71,17 @@ public class GameScreen implements Screen {
 
         debugRenderer = new Box2DDebugRenderer();
 
-        groundCols = new ArrayList<>();
-        for(float i = -1; i <= 1; i += 0.01){
-            createGroundColumn(i, (float)0.3 + (float)0.05 * (float)Math.sin(i * 10));
-//            createGroundColumn(i, (float)0.3);
+        groundHeights = new ArrayList<Float>();
+        groundCols = new ArrayList<Body>();
+        for(float i = -1; i <= 1; i += 0.005){
+//            createGroundColumn(i, (float)0.3 + (float)0.05 * (float)Math.sin(i * 10));
+            createGroundColumn(i, (float)0.3);
         }
 
-        BodyDef tank1Def = new BodyDef();
-        tank1Def.type = BodyDef.BodyType.DynamicBody;
-        tank1Def.position.set((float)0.45, (float)0.1);
-        tank1 = world.createBody(tank1Def);
-        PolygonShape tank1Shape = new PolygonShape();
-        tank1Shape.setAsBox((float)0.02, (float)0.04);
-        FixtureDef tank1Fixture = new FixtureDef();
-        tank1Fixture.shape = tank1Shape;
-        tank1Fixture.density = 1;
-        tank1Fixture.friction = 1f;
-        tank1Fixture.restitution = -1f;
-        tank1.createFixture(tank1Fixture);
-        tank1Shape.dispose();
-
-        BodyDef tank2Def = new BodyDef();
-        tank2Def.type = BodyDef.BodyType.DynamicBody;
-        tank2Def.position.set((float)-0.45, (float)0.1);
-        tank2 = world.createBody(tank2Def);
-        PolygonShape tank2Shape = new PolygonShape();
-        tank2Shape.setAsBox((float)0.02, (float)0.04);
-        FixtureDef tank2Fixture = new FixtureDef();
-        tank2Fixture.shape = tank1Shape;
-        tank2Fixture.density = 1;
-        tank2Fixture.friction = 1f;
-        tank2Fixture.restitution = -1f;
-        tank2.createFixture(tank2Fixture);
-        tank2Shape.dispose();
+        Tank tank1Obj = new Tank(world, 0.45f, 0.1f);
+        Tank tank2Obj = new Tank(world, -0.45f, 0.1f);
+        tank1 = tank1Obj.getTank();
+        tank2 = tank2Obj.getTank();
 
         // creating pause menu
         pauseMenu = new PauseMenu();
@@ -130,6 +109,9 @@ public class GameScreen implements Screen {
     }
 
     private void createGroundColumn(float x, float y){
+
+        groundHeights.add(y);
+
         BodyDef groundColDef = new BodyDef();
         groundColDef.type = BodyDef.BodyType.StaticBody;
         groundColDef.position.set(x, y - 1);
@@ -201,13 +183,7 @@ public class GameScreen implements Screen {
         batch.draw(healthBarR, TankStars.WIDTH/2f + 50, TankStars.HEIGHT - 10 - healthBarR.getHeight(), healthBarR.getWidth(), healthBarR.getHeight());
 
         // Ground
-        for(Body groundCol : groundCols){
-            Vector2 pos = groundCol.getPosition();
-            float width = 6;
-//            float height = groundCol.getFixtureList().get(0).getShape().ge
-            float height = 115;
-            batch.draw(ground, Gdx.graphics.getWidth()/2 + pos.x*(Gdx.graphics.getWidth()/2), Gdx.graphics.getHeight()/2 + pos.y*505, width*2, height*2);
-        }
+        renderGround();
 
         // tanks
         tank1Sprite.setPosition(Gdx.graphics.getWidth()/2 + tank1.getPosition().x*(Gdx.graphics.getWidth()/2) - 90, Gdx.graphics.getHeight()/2 + tank1.getPosition().y*(Gdx.graphics.getHeight()/2) - 45);
@@ -224,6 +200,17 @@ public class GameScreen implements Screen {
 //        Comment or uncomment this line to see the polygons
         debugRenderer.render(world, camera.combined);
 
+    }
+
+    private void renderGround(){
+        for(int i = 0; i < groundCols.size(); i++){
+            Body groundCol = groundCols.get(i);
+            Vector2 pos = groundCol.getPosition();
+            float width = 1.7f;
+//            float height = groundCol.getFixtureList().get(0).getShape().ge
+            float height = groundHeights.get(i)*312;
+            batch.draw(ground, Gdx.graphics.getWidth()/2 + pos.x*(Gdx.graphics.getWidth()/2), 0, width*2, height*2);
+        }
     }
 
     private void stepWorld(){

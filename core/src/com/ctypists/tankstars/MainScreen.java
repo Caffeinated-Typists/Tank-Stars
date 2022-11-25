@@ -13,13 +13,14 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class MainScreen implements Screen {
 
     Game game;
     OrthographicCamera camera;
-    FitViewport viewport;
+    ExtendViewport viewport;
     SpriteBatch batch;
     Stage mainStage;
     AssetManager manager;
@@ -32,10 +33,9 @@ public class MainScreen implements Screen {
 
     @Override
     public void show() {
-        mainStage = new Stage();
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
-        viewport = new FitViewport(TankStars.WIDTH, TankStars.HEIGHT, camera);
+        viewport = new ExtendViewport(TankStars.WIDTH, TankStars.HEIGHT, camera);
         mainStage = new Stage(viewport, batch);
         Gdx.input.setInputProcessor(mainStage);
         camera.setToOrtho(false, TankStars.WIDTH, TankStars.HEIGHT);

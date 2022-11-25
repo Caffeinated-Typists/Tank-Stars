@@ -8,13 +8,16 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 import java.util.ArrayList;
@@ -36,6 +39,8 @@ public class GameScreen implements Screen {
     Texture healthBarR;
     Sprite tank1Sprite;
     Sprite tank2Sprite;
+    ImageButton pauseIcon;
+    PauseMenu pauseMenu;
 
     World world;
     Box2DDebugRenderer debugRenderer;
@@ -51,12 +56,16 @@ public class GameScreen implements Screen {
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
         viewport = new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
+        gameStage = new Stage(viewport, batch);
+
 
         Texture tank1Texture = new Texture(Gdx.files.internal("TankTexture1.png"));
+        tank1Texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         tank1Sprite = new Sprite(tank1Texture);
         tank1Sprite.setScale(0.4f);
         tank1Sprite.flip(true, false);
         Texture tank2Texture = new Texture(Gdx.files.internal("TankTexture2.png"));
+        tank2Texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         tank2Sprite = new Sprite(tank2Texture);
         tank2Sprite.setScale(0.4f);
 
@@ -76,6 +85,24 @@ public class GameScreen implements Screen {
         Tank tank2Obj = new Tank(world, -0.45f, 0.1f);
         tank1 = tank1Obj.getTank();
         tank2 = tank2Obj.getTank();
+
+        // creating pause menu
+        pauseMenu = new PauseMenu();
+
+        // adding pause menu icon
+        Texture pauseIconTexture = new Texture(Gdx.files.internal("menuIcon.png"));
+        pauseIconTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        pauseIcon = new ImageButton(new TextureRegionDrawable(new TextureRegion(pauseIconTexture)));
+        pauseIcon.setBounds(10, Gdx.graphics.getHeight() - pauseIcon.getHeight()/2 - 10, pauseIcon.getWidth() / 2, pauseIcon.getHeight() / 2);
+        pauseIcon.addListener(new ClickListener() {
+            @Override
+            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+                System.out.println("pause icon clicked");
+                gameStage.addActor(pauseMenu);
+            }
+        });
+
+        gameStage.addActor(pauseIcon);
     }
 
     private void createGroundColumn(float x, float y){
@@ -94,6 +121,9 @@ public class GameScreen implements Screen {
         groundCol.createFixture(groundColFixture);
         groundCols.add(groundCol);
         groundColShape.dispose();
+
+
+
     }
 
     @Override
@@ -104,6 +134,10 @@ public class GameScreen implements Screen {
         healthBarR = new Texture(Gdx.files.internal("HealthBarR.png"));
         ground = new Texture(Gdx.files.internal("ground.png"));
         gamebackground.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        healthBarL.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        healthBarR.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        ground.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        Gdx.input.setInputProcessor(gameStage);
 
 //        settingsWindow = new Windo/w("Settings", gameStage.getSkin());
 
@@ -115,6 +149,7 @@ public class GameScreen implements Screen {
 //                settingsWindow = new Window();
 //            }
 //        });
+
 
     }
 
@@ -149,7 +184,7 @@ public class GameScreen implements Screen {
         tank2Sprite.draw(batch);
 
         batch.end();
-
+        gameStage.draw();
 //        Comment or uncomment this line to see the polygons
         debugRenderer.render(world, camera.combined);
 
@@ -198,6 +233,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        gameStage.dispose();
     }
 }

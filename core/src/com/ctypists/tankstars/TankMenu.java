@@ -4,13 +4,19 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import org.w3c.dom.Text;
 
 public class TankMenu implements Screen {
     Game game;
@@ -21,18 +27,23 @@ public class TankMenu implements Screen {
     ImageButton arrowLeft, arrowRight;
     ImageTextButton playButton, backButton;
     MainScreen mainScreen;
+    PauseMenu pauseMenu;
+    OrthographicCamera camera;
+    ExtendViewport viewport;
 
     public TankMenu(Game game, MainScreen mainScreen) {
         this.game = game;
         this.mainScreen = mainScreen;
-        System.out.println("TankMenu created");
+//        System.out.println("TankMenu created");
     }
 
 
     @Override
     public void show() {
+        camera = new OrthographicCamera();
+        viewport = new ExtendViewport(TankStars.WIDTH, TankStars.HEIGHT, camera);
         menuBatch = new SpriteBatch();
-        menuStage = new Stage();
+        menuStage = new Stage(viewport, menuBatch);
         buttongen = new ButtonGenerator();
         Gdx.input.setInputProcessor(menuStage);
         tank1 = new Texture(Gdx.files.internal("Tank1.png"));
@@ -43,8 +54,14 @@ public class TankMenu implements Screen {
         gamebackground.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
         // creating cycle through arrows
-        arrowLeft = new ImageButton(new TextureRegionDrawable( new TextureRegion( new Texture(Gdx.files.internal("arrowLeft.png")))));
-        arrowRight = new ImageButton(new TextureRegionDrawable( new TextureRegion( new Texture(Gdx.files.internal("arrowRight.png")))));
+        Texture arrowLeftTexture = new Texture(Gdx.files.internal("arrowLeft.png"));
+        arrowLeftTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        Texture arrowRightTexture = new Texture(Gdx.files.internal("arrowRight.png"));
+        arrowRightTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+
+        arrowLeft = new ImageButton(new TextureRegionDrawable( new TextureRegion(( arrowLeftTexture))));
+        arrowRight = new ImageButton(new TextureRegionDrawable( new TextureRegion( arrowRightTexture)));
+
         arrowRight.setPosition(Gdx.graphics.getWidth() - arrowLeft.getWidth() - 100, Gdx.graphics.getHeight() / 2f - arrowLeft.getHeight() / 2);
         arrowLeft.setPosition(Gdx.graphics.getWidth() / 2f + 100, Gdx.graphics.getHeight() / 2f - arrowRight.getHeight() / 2);
         menuStage.addActor(arrowLeft);
@@ -62,6 +79,8 @@ public class TankMenu implements Screen {
 
         menuStage.addActor(playButton);
         menuStage.addActor(backButton);
+//        menuStage.addActor(pauseMenu);
+
     }
 
     @Override
@@ -99,7 +118,7 @@ public class TankMenu implements Screen {
 
     @Override
     public void dispose() {
-
+        menuStage.dispose();
     }
 }
 

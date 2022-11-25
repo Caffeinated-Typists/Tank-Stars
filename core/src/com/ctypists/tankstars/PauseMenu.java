@@ -3,15 +3,13 @@ package com.ctypists.tankstars;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 public class PauseMenu extends Table {
     ImageTextButton resumeButton, saveButton, exitButton;
-    ButtonGenerator buttonGenerator;
+    private ButtonGenerator buttonGenerator;
 
     public PauseMenu() {
         Texture backgroundTexture = new Texture(Gdx.files.internal("menuBG.png"));

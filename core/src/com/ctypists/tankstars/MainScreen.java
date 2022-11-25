@@ -14,18 +14,17 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class MainScreen implements Screen {
 
-    Game game;
-    OrthographicCamera camera;
-    ExtendViewport viewport;
-    SpriteBatch batch;
-    Stage mainStage;
-    AssetManager manager;
-    Texture mainBackground;
-    Sprite backgroundSprite;
+    private Game game;
+    private OrthographicCamera camera;
+    private ExtendViewport viewport;
+    private SpriteBatch batch;
+    private Stage mainStage;
+    private AssetManager manager;
+    private Texture mainBackground;
+    private Sprite backgroundSprite;
 
     public MainScreen(Game game) {
         this.game = game;

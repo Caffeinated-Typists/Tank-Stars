@@ -6,30 +6,26 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import org.w3c.dom.Text;
 
 public class TankMenu implements Screen {
-    Game game;
-    SpriteBatch menuBatch;
-    Stage menuStage;
-    ButtonGenerator buttongen;
-    Texture tank1, gamebackground;
-    ImageButton arrowLeft, arrowRight;
-    ImageTextButton playButton, backButton;
-    MainScreen mainScreen;
-    PauseMenu pauseMenu;
-    OrthographicCamera camera;
-    ExtendViewport viewport;
+    private Game game;
+    private SpriteBatch menuBatch;
+    private Stage menuStage;
+    private ButtonGenerator buttongen;
+    private Texture tank1, gamebackground;
+    private ImageButton arrowLeft, arrowRight;
+    private ImageTextButton playButton, backButton;
+    private MainScreen mainScreen;
+    private PauseMenu pauseMenu;
+    private OrthographicCamera camera;
+    private ExtendViewport viewport;
 
     public TankMenu(Game game, MainScreen mainScreen) {
         this.game = game;

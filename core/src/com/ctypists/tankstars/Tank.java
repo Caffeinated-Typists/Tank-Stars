@@ -4,7 +4,7 @@ import com.badlogic.gdx.physics.box2d.*;
 
 public class Tank{
 
-    public Body tank;
+    private Body tank;
 
     public Tank(World world, float x, float y){
         BodyDef tankDef = new BodyDef();

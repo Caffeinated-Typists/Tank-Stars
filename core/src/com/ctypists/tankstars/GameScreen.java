@@ -14,40 +14,40 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 public class GameScreen implements Screen {
-    static final float STEP_TIME = 1f / 60f;
-    static final int VELOCITY_ITERATIONS = 6;
-    static final int POSITION_ITERATIONS = 2;
+    private static final float STEP_TIME = 1f / 60f;
+    private static final int VELOCITY_ITERATIONS = 6;
+    private static final int POSITION_ITERATIONS = 2;
 
     Game game;
     SpriteBatch batch;
     Texture gamebackground, ground, healthBarL, healthBarR, joystick, fuel;
-    OrthographicCamera camera;
-    ExtendViewport viewport;
-    Stage gameStage;
-    Window settingsWindow;
-    Sprite tank1Sprite, tank2Sprite;
-    ImageButton pauseIcon;
-    ImageTextButton fireButton;
-    PauseMenu pauseMenu;
-    ButtonGenerator buttongen;
-    BitmapFont font;
+    private OrthographicCamera camera;
+    private ExtendViewport viewport;
+    private Stage gameStage;
+    private Window settingsWindow;
+    private Sprite tank1Sprite, tank2Sprite;
+    private ImageButton pauseIcon;
+    private ImageTextButton fireButton;
+    private PauseMenu pauseMenu;
+    private ButtonGenerator buttongen;
+    private BitmapFont font;
 
-    World world;
-    Box2DDebugRenderer debugRenderer;
-    float accumulator = 0;
-    Body tank1;
-    Body tank2;
-    ArrayList<Body> groundCols;
-    ArrayList<Float> groundHeights;
+    private World world;
+    private Box2DDebugRenderer debugRenderer;
+    private float accumulator = 0;
+    private Body tank1;
+    private Body tank2;
+    private ArrayList<Body> groundCols;
+    private ArrayList<Float> groundHeights;
 
     public GameScreen(Game game) {
         this.game = game;

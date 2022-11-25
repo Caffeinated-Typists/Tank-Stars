@@ -29,18 +29,15 @@ public class GameScreen implements Screen {
 
     Game game;
     SpriteBatch batch;
-    Texture gamebackground;
-    Texture ground;
+    Texture gamebackground, ground, healthBarL, healthBarR, joystick;
     OrthographicCamera camera;
     ExtendViewport viewport;
     Stage gameStage;
     Window settingsWindow;
-    Texture healthBarL;
-    Texture healthBarR;
-    Sprite tank1Sprite;
-    Sprite tank2Sprite;
+    Sprite tank1Sprite, tank2Sprite;
     ImageButton pauseIcon;
     PauseMenu pauseMenu;
+    ButtonGenerator buttongen;
 
     World world;
     Box2DDebugRenderer debugRenderer;
@@ -73,7 +70,7 @@ public class GameScreen implements Screen {
 
         debugRenderer = new Box2DDebugRenderer();
 
-        groundCols = new ArrayList<Body>();
+        groundCols = new ArrayList<>();
         for(float i = -1; i <= 1; i += 0.01){
             createGroundColumn(i, (float)0.3 + (float)0.05 * (float)Math.sin(i * 10));
 //            createGroundColumn(i, (float)0.3);
@@ -109,19 +106,25 @@ public class GameScreen implements Screen {
 
         // creating pause menu
         pauseMenu = new PauseMenu();
+        pauseMenu.resumeButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+                System.out.println("Resume button clicked");
+                gameStage.getActors().removeValue(pauseMenu, true);
+            }
+        });
+
+        buttongen = new ButtonGenerator();
+        buttongen.setNextScreen(pauseMenu.saveButton, new MainScreen(game), game);
+        buttongen.setNextScreen(pauseMenu.exitButton, new MainScreen(game), game);
+
 
         // adding pause menu icon
         Texture pauseIconTexture = new Texture(Gdx.files.internal("menuIcon.png"));
         pauseIconTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         pauseIcon = new ImageButton(new TextureRegionDrawable(new TextureRegion(pauseIconTexture)));
         pauseIcon.setBounds(10, Gdx.graphics.getHeight() - pauseIcon.getHeight()/2 - 10, pauseIcon.getWidth() / 2, pauseIcon.getHeight() / 2);
-        pauseIcon.addListener(new ClickListener() {
-            @Override
-            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-                System.out.println("pause icon clicked");
-                gameStage.addActor(pauseMenu);
-            }
-        });
+
 
         gameStage.addActor(pauseIcon);
     }
@@ -134,7 +137,7 @@ public class GameScreen implements Screen {
         FixtureDef groundColFixture = new FixtureDef();
         groundColFixture.friction = 1f;
         PolygonShape groundColShape = new PolygonShape();
-        groundColShape.setAsBox((float)0.005, (float)y);
+        groundColShape.setAsBox((float)0.005, y);
         groundColFixture.shape = groundColShape;
         groundCol.createFixture(groundColFixture);
         groundCols.add(groundCol);
@@ -147,6 +150,7 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         // Textures
+        joystick = new Texture(Gdx.files.internal("aim.png"));
         gamebackground = new Texture(Gdx.files.internal("gameBackground.png"));
         healthBarL = new Texture(Gdx.files.internal("HealthBarL.png"));
         healthBarR = new Texture(Gdx.files.internal("HealthBarR.png"));
@@ -156,6 +160,13 @@ public class GameScreen implements Screen {
         healthBarR.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         ground.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         Gdx.input.setInputProcessor(gameStage);
+        pauseIcon.addListener(new ClickListener() {
+            @Override
+            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+                System.out.println("pause");
+                gameStage.addActor(pauseMenu);
+            }
+        });
 
 //        settingsWindow = new Windo/w("Settings", gameStage.getSkin());
 
@@ -207,6 +218,7 @@ public class GameScreen implements Screen {
         tank2Sprite.setRotation((float)Math.toDegrees(tank2.getAngle()));
         tank2Sprite.draw(batch);
 
+        batch.draw(joystick, Gdx.graphics.getWidth() - joystick.getWidth()/3f - 100,     30, joystick.getWidth()/3f , joystick.getHeight()/3f);
         batch.end();
         gameStage.draw();
 //        Comment or uncomment this line to see the polygons

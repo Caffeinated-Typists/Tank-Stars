@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -20,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class GameScreen implements Screen {
@@ -29,15 +31,17 @@ public class GameScreen implements Screen {
 
     Game game;
     SpriteBatch batch;
-    Texture gamebackground, ground, healthBarL, healthBarR, joystick;
+    Texture gamebackground, ground, healthBarL, healthBarR, joystick, fuel;
     OrthographicCamera camera;
     ExtendViewport viewport;
     Stage gameStage;
     Window settingsWindow;
     Sprite tank1Sprite, tank2Sprite;
     ImageButton pauseIcon;
+    ImageTextButton fireButton;
     PauseMenu pauseMenu;
     ButtonGenerator buttongen;
+    BitmapFont font;
 
     World world;
     Box2DDebugRenderer debugRenderer;
@@ -83,6 +87,10 @@ public class GameScreen implements Screen {
         tank1 = tank1Obj.getTank();
         tank2 = tank2Obj.getTank();
 
+        font = new BitmapFont(Gdx.files.internal("font.fnt"));
+        font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        font.getData().setScale(0.5f);
+
         // creating pause menu
         pauseMenu = new PauseMenu();
         pauseMenu.resumeButton.addListener(new ClickListener() {
@@ -97,14 +105,19 @@ public class GameScreen implements Screen {
         buttongen.setNextScreen(pauseMenu.saveButton, new MainScreen(game), game);
         buttongen.setNextScreen(pauseMenu.exitButton, new MainScreen(game), game);
 
-
+        // fire button
+        fireButton = buttongen.createButton("FIRE", String.valueOf(Gdx.files.internal("fire.png")));
+        fireButton.setBounds(Gdx.graphics.getWidth() * 0.75f - fireButton.getWidth() / 2,
+                Gdx.graphics.getHeight() * 0.25f - fireButton.getHeight() / 2,
+                fireButton.getWidth() / 2,
+                fireButton.getHeight() / 2);
         // adding pause menu icon
         Texture pauseIconTexture = new Texture(Gdx.files.internal("menuIcon.png"));
         pauseIconTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         pauseIcon = new ImageButton(new TextureRegionDrawable(new TextureRegion(pauseIconTexture)));
         pauseIcon.setBounds(10, Gdx.graphics.getHeight() - pauseIcon.getHeight()/2 - 10, pauseIcon.getWidth() / 2, pauseIcon.getHeight() / 2);
 
-
+        gameStage.addActor(fireButton);
         gameStage.addActor(pauseIcon);
     }
 
@@ -132,6 +145,7 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         // Textures
+        fuel = new Texture(Gdx.files.internal("fuel.png"));
         joystick = new Texture(Gdx.files.internal("aim.png"));
         gamebackground = new Texture(Gdx.files.internal("gameBackground.png"));
         healthBarL = new Texture(Gdx.files.internal("HealthBarL.png"));
@@ -195,7 +209,11 @@ public class GameScreen implements Screen {
         tank2Sprite.draw(batch);
 
         batch.draw(joystick, Gdx.graphics.getWidth() - joystick.getWidth()/3f - 100,     30, joystick.getWidth()/3f , joystick.getHeight()/3f);
+//        batch.draw(fuel, 100, 30, fuel.getWidth()/3f, fuel.getHeight()/3f);
+
+//        font.draw(batch, "FUEL", 100 + fuel.getWidth() / 3f, 30 + fuel.getHeight() / 3f);
         batch.end();
+
         gameStage.draw();
 //        Comment or uncomment this line to see the polygons
         debugRenderer.render(world, camera.combined);

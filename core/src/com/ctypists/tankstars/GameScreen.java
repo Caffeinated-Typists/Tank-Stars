@@ -46,8 +46,10 @@ public class GameScreen implements Screen {
     private float accumulator = 0;
     private Body tank1;
     private Body tank2;
+    private Ground groundObj;
     private ArrayList<Body> groundCols;
     private ArrayList<Float> groundHeights;
+    private ArrayList<Float> groundPos;
 
     public GameScreen(Game game) {
         this.game = game;
@@ -74,11 +76,14 @@ public class GameScreen implements Screen {
         debugRenderer = new Box2DDebugRenderer();
 
         groundHeights = new ArrayList<Float>();
-        groundCols = new ArrayList<Body>();
+        groundPos = new ArrayList<Float>();
         for(float i = -1; i <= 1; i += 0.005){
 //            createGroundColumn(i, (float)0.3 + (float)0.05 * (float)Math.sin(i * 10));
-            createGroundColumn(i, (float)0.3);
+            groundPos.add(i);
+            groundHeights.add(0.3f);
         }
+        groundObj = new Ground(world, groundPos, groundHeights);
+        groundCols = groundObj.getGroundCols();
 
         Tank tank1Obj = new Tank(world, 0.45f, 0.1f);
         Tank tank2Obj = new Tank(world, -0.45f, 0.1f);
@@ -117,27 +122,6 @@ public class GameScreen implements Screen {
 
         gameStage.addActor(fireButton);
         gameStage.addActor(pauseIcon);
-    }
-
-    private void createGroundColumn(float x, float y){
-
-        groundHeights.add(y);
-
-        BodyDef groundColDef = new BodyDef();
-        groundColDef.type = BodyDef.BodyType.StaticBody;
-        groundColDef.position.set(x, y - 1);
-        Body groundCol = world.createBody(groundColDef);
-        FixtureDef groundColFixture = new FixtureDef();
-        groundColFixture.friction = 1f;
-        PolygonShape groundColShape = new PolygonShape();
-        groundColShape.setAsBox((float)0.005, y);
-        groundColFixture.shape = groundColShape;
-        groundCol.createFixture(groundColFixture);
-        groundCols.add(groundCol);
-        groundColShape.dispose();
-
-
-
     }
 
     @Override

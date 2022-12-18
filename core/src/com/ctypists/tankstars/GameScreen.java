@@ -32,12 +32,12 @@ public class GameScreen implements Screen {
     private static final int VELOCITY_ITERATIONS = 6;
     private static final int POSITION_ITERATIONS = 2;
 
-    Game game;
-    SpriteBatch batch;
-    Texture gamebackground, ground, healthBarL, healthBarR, joystick, fuel;
-     OrthographicCamera camera;
-     ExtendViewport viewport;
-     Stage gameStage;
+    private Game game;
+    private SpriteBatch batch;
+    private Texture gamebackground, ground, joystick, fuel;
+    private OrthographicCamera camera;
+    private ExtendViewport viewport;
+    private Stage gameStage;
     private Window settingsWindow;
     private Sprite tank1Sprite, tank2Sprite;
     private ImageButton pauseIcon;
@@ -46,6 +46,7 @@ public class GameScreen implements Screen {
     private ButtonGenerator buttongen;
     private BitmapFont font;
     private Joystick joystickgen;
+    private HealthBar healthBarL, healthBarR;
 
     private World world;
     private Box2DDebugRenderer debugRenderer;
@@ -127,6 +128,7 @@ public class GameScreen implements Screen {
                 Gdx.graphics.getHeight() * 0.25f - fireButton.getHeight() / 2,
                 fireButton.getWidth() / 2,
                 fireButton.getHeight() / 2);
+
         // adding pause menu icon
         Texture pauseIconTexture = new Texture(Gdx.files.internal("menuIcon.png"));
         pauseIconTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
@@ -154,14 +156,22 @@ public class GameScreen implements Screen {
         fuelKnob.setBounds(10, 10, 100, 50);
 
         // health bar experiment
-        HealthBar healthBar = new HealthBar();
-        healthBar.setBounds(500, 200, 1000, 66);
+        HealthBar healthBarL = new HealthBar(), healthBarR = new HealthBar();
+        healthBarL.HealthBarL();
+        healthBarR.HealthBarR();
+
+        healthBarR.setBounds(TankStars.WIDTH/2f + 50, TankStars.HEIGHT - 10 - healthBarL.getHeight(), healthBarR.getWidth(), healthBarR.getHeight());
+        healthBarL.setBounds(TankStars.WIDTH/2f - healthBarL.getWidth() - 50, TankStars.HEIGHT - 10 - healthBarL.getHeight(), healthBarL.getWidth(), healthBarL.getHeight());
+
+        healthBarL.setHealth(0.5f);
+        healthBarR.setHealth(0.2f);
 
         gameStage.addActor(fuelKnob);
         gameStage.addActor(fireButton);
         gameStage.addActor(pauseIcon);
         gameStage.addActor(touchpad);
-        gameStage.addActor(healthBar);
+        gameStage.addActor(healthBarR);
+        gameStage.addActor(healthBarL);
 
     }
 
@@ -171,12 +181,8 @@ public class GameScreen implements Screen {
         fuel = new Texture(Gdx.files.internal("fuel.png"));
         joystick = new Texture(Gdx.files.internal("aim.png"));
         gamebackground = new Texture(Gdx.files.internal("gameBackground.png"));
-        healthBarL = new Texture(Gdx.files.internal("HealthBarL.png"));
-        healthBarR = new Texture(Gdx.files.internal("HealthBarR.png"));
         ground = new Texture(Gdx.files.internal("ground.png"));
         gamebackground.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        healthBarL.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        healthBarR.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         ground.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         Gdx.input.setInputProcessor(gameStage);
         pauseIcon.addListener(new ClickListener() {
@@ -209,9 +215,6 @@ public class GameScreen implements Screen {
         // background
         batch.draw(gamebackground, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        //health bars
-        batch.draw(healthBarL, TankStars.WIDTH/2f - healthBarL.getWidth() - 50, TankStars.HEIGHT - 10 - healthBarL.getHeight(), healthBarL.getWidth(), healthBarL.getHeight());
-        batch.draw(healthBarR, TankStars.WIDTH/2f + 50, TankStars.HEIGHT - 10 - healthBarR.getHeight(), healthBarR.getWidth(), healthBarR.getHeight());
 
         // Ground
         renderGround();

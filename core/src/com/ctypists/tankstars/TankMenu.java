@@ -23,7 +23,6 @@ public class TankMenu implements Screen {
     private ImageButton arrowLeft, arrowRight;
     private ImageTextButton playButton, backButton;
     private MainScreen mainScreen;
-    private PauseMenu pauseMenu;
     private OrthographicCamera camera;
     private ExtendViewport viewport;
 

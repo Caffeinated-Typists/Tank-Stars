@@ -1,0 +1,7 @@
+{
+  "com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle": {
+    "default" : {
+      "font": {"file" :  "font.fnt"}
+    }
+  }
+}

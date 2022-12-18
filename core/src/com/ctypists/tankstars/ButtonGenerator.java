@@ -19,6 +19,7 @@ public class ButtonGenerator {
     private BitmapFont font;
 
     public ImageTextButton createButton(String text, String texture){
+        skin = new Skin(Gdx.files.internal("uiskin.json"));
         image = new Texture(Gdx.files.internal(texture));
         image.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         imageDrawable = new TextureRegionDrawable(new TextureRegion(image));

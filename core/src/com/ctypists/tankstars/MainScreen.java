@@ -25,6 +25,7 @@ public class MainScreen implements Screen {
     private AssetManager manager;
     private Texture mainBackground;
     private Sprite backgroundSprite;
+    private ButtonGenerator buttongen;
 
     public MainScreen(Game game) {
         this.game = game;
@@ -43,7 +44,7 @@ public class MainScreen implements Screen {
         mainBackground.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         backgroundSprite = new Sprite(mainBackground);
 
-        ButtonGenerator buttongen = new ButtonGenerator();
+        buttongen = new ButtonGenerator();
 
         // new game
         ImageTextButton new_game = buttongen.createButton("NEW");
@@ -54,7 +55,7 @@ public class MainScreen implements Screen {
 
         // load game
         ImageTextButton load_game = buttongen.createButton("LOAD");
-        buttongen.setNextScreen(load_game, new TankMenu(game, this), game);
+        buttongen.setNextScreen(load_game, new LoadScreen(game, this), game);
         load_game.setPosition(TankStars.WIDTH / 2f - load_game.getWidth() / 2f, TankStars.HEIGHT / 2f - load_game.getWidth()/ 2);
 
 

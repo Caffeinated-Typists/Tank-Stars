@@ -18,6 +18,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -43,6 +44,7 @@ public class GameScreen implements Screen {
     private PauseMenu pauseMenu;
     private ButtonGenerator buttongen;
     private BitmapFont font;
+    private Joystick joystickgen;
 
     private World world;
     private Box2DDebugRenderer debugRenderer;
@@ -55,6 +57,8 @@ public class GameScreen implements Screen {
     private ArrayList<Float> groundHeights;
     private ArrayList<Float> groundPos;
 
+    private State state = State.RUN;
+    private boolean isPaused = false;
     public GameScreen(Game game) {
         this.game = game;
 
@@ -62,6 +66,7 @@ public class GameScreen implements Screen {
         camera = new OrthographicCamera();
         viewport = new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
         gameStage = new Stage(viewport, batch);
+        buttongen = new ButtonGenerator();
 
         Texture tank1Texture = new Texture(Gdx.files.internal("TankTexture1.png"));
         tank1Texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
@@ -102,14 +107,18 @@ public class GameScreen implements Screen {
         pauseMenu.resumeButton.addListener(new ClickListener() {
             @Override
             public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-                System.out.println("Resume button clicked");
-                gameStage.getActors().removeValue(pauseMenu, true);
+                if (isPaused){
+                    System.out.println("Resume button clicked");
+                    gameStage.getActors().removeValue(pauseMenu, true);
+                    isPaused = false;
+                }
             }
         });
 
-        buttongen = new ButtonGenerator();
         buttongen.setNextScreen(pauseMenu.saveButton, new MainScreen(game), game);
         buttongen.setNextScreen(pauseMenu.exitButton, new MainScreen(game), game);
+
+
 
         // fire button
         fireButton = buttongen.createButton("FIRE", String.valueOf(Gdx.files.internal("fire.png")));
@@ -122,9 +131,31 @@ public class GameScreen implements Screen {
         pauseIconTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         pauseIcon = new ImageButton(new TextureRegionDrawable(new TextureRegion(pauseIconTexture)));
         pauseIcon.setBounds(10, Gdx.graphics.getHeight() - pauseIcon.getHeight()/2 - 10, pauseIcon.getWidth() / 2, pauseIcon.getHeight() / 2);
+        pauseIcon.addListener(new ClickListener() {
+            @Override
+            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+                System.out.println("pause");
+                if (!isPaused) {
+                    gameStage.addActor(pauseMenu);
+                    isPaused = true;
+                }
+            }
+        });
 
+        // joystick
+        joystickgen = new Joystick();
+        Touchpad touchpad = joystickgen.getTouchpad();
+        touchpad.setBounds(Gdx.graphics.getWidth() - touchpad.getWidth() - 10, 10, touchpad.getWidth(), touchpad.getHeight());
+        touchpad.setResetOnTouchUp(false);
+
+        // fuel knob
+        Touchpad fuelKnob = joystickgen.getFuelTouchpad();
+        fuelKnob.setBounds(10, 10, 100, 50);
+
+        gameStage.addActor(fuelKnob);
         gameStage.addActor(fireButton);
         gameStage.addActor(pauseIcon);
+        gameStage.addActor(touchpad);
     }
 
     @Override
@@ -170,6 +201,11 @@ public class GameScreen implements Screen {
                 (Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
         Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
 
+//        switch (state){
+//            case RUN:
+//                stepWorld();
+//                break;
+//        }
         stepWorld();
 
         batch.begin();
@@ -193,13 +229,13 @@ public class GameScreen implements Screen {
 //        tank2Sprite.setRotation((float)Math.toDegrees(tank2.getAngle()));
         tank2Sprite.draw(batch);
 
-        batch.draw(joystick, Gdx.graphics.getWidth() - joystick.getWidth()/3f - 100,     30, joystick.getWidth()/3f , joystick.getHeight()/3f);
 //        batch.draw(fuel, 100, 30, fuel.getWidth()/3f, fuel.getHeight()/3f);
 
 //        font.draw(batch, "FUEL", 100 + fuel.getWidth() / 3f, 30 + fuel.getHeight() / 3f);
         batch.end();
 
         gameStage.draw();
+        gameStage.act();
 //        Comment or uncomment this line to see the polygons
         debugRenderer.render(world, camera.combined);
 

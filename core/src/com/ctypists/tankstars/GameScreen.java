@@ -15,6 +15,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
@@ -34,9 +35,9 @@ public class GameScreen implements Screen {
     Game game;
     SpriteBatch batch;
     Texture gamebackground, ground, healthBarL, healthBarR, joystick, fuel;
-    private OrthographicCamera camera;
-    private ExtendViewport viewport;
-    private Stage gameStage;
+     OrthographicCamera camera;
+     ExtendViewport viewport;
+     Stage gameStage;
     private Window settingsWindow;
     private Sprite tank1Sprite, tank2Sprite;
     private ImageButton pauseIcon;
@@ -152,10 +153,16 @@ public class GameScreen implements Screen {
         Touchpad fuelKnob = joystickgen.getFuelTouchpad();
         fuelKnob.setBounds(10, 10, 100, 50);
 
+        // health bar experiment
+        HealthBar healthBar = new HealthBar();
+        healthBar.setBounds(500, 200, 1000, 66);
+
         gameStage.addActor(fuelKnob);
         gameStage.addActor(fireButton);
         gameStage.addActor(pauseIcon);
         gameStage.addActor(touchpad);
+        gameStage.addActor(healthBar);
+
     }
 
     @Override
@@ -179,17 +186,6 @@ public class GameScreen implements Screen {
                 gameStage.addActor(pauseMenu);
             }
         });
-
-//        settingsWindow = new Window("Settings", gameStage.getSkin());
-
-//        ButtonGenerator buttongen = new ButtonGenerator();
-//        ImageTextButton settings = buttongen.createButton("SETTINGS");
-//        settings.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(InputEvent event, float x, float y) {
-//                settingsWindow = new Window();
-//            }
-//        });
 
 
     }

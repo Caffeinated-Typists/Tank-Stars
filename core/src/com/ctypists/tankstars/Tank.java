@@ -2,7 +2,7 @@ package com.ctypists.tankstars;
 
 import com.badlogic.gdx.physics.box2d.*;
 
-public class Tank{
+public class  Tank{
 
     private Body tank;
 

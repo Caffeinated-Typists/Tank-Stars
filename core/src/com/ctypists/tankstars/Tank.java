@@ -5,8 +5,10 @@ import com.badlogic.gdx.physics.box2d.*;
 public class  Tank{
 
     private Body tank;
+    private World world;
 
     public Tank(World world, float x, float y){
+        this.world = world;
         BodyDef tankDef = new BodyDef();
         tankDef.type = BodyDef.BodyType.DynamicBody;
         tankDef.position.set(x, y);

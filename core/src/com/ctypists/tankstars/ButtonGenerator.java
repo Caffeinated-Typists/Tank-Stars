@@ -8,17 +8,15 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton.ImageTextButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 public class ButtonGenerator {
-    Texture image;
-    Drawable imageDrawable;
-    ImageTextButtonStyle mystyle;
-    BitmapFont font;
-    Skin skin;
+    private Texture image;
+    private Drawable imageDrawable;
+    private ImageTextButtonStyle mystyle;
+    private BitmapFont font;
 
     public ImageTextButton createButton(String text, String texture){
         skin = new Skin(Gdx.files.internal("uiskin.json"));

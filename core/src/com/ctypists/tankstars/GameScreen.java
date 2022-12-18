@@ -11,7 +11,10 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Box2D;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
@@ -44,6 +47,7 @@ public class GameScreen implements Screen {
     private World world;
     private Box2DDebugRenderer debugRenderer;
     private float accumulator = 0;
+    private Tank tank1Obj, tank2Obj;
     private Body tank1;
     private Body tank2;
     private Ground groundObj;
@@ -58,7 +62,6 @@ public class GameScreen implements Screen {
         camera = new OrthographicCamera();
         viewport = new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
         gameStage = new Stage(viewport, batch);
-
 
         Texture tank1Texture = new Texture(Gdx.files.internal("TankTexture1.png"));
         tank1Texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
@@ -78,15 +81,15 @@ public class GameScreen implements Screen {
         groundHeights = new ArrayList<Float>();
         groundPos = new ArrayList<Float>();
         for(float i = -1; i <= 1; i += 0.005){
-//            createGroundColumn(i, (float)0.3 + (float)0.05 * (float)Math.sin(i * 10));
             groundPos.add(i);
-            groundHeights.add(0.3f);
+//            groundHeights.add(0.3f);
+            groundHeights.add((float)0.3 + (float)0.05 * (float)Math.sin(i * 10));
         }
         groundObj = new Ground(world, groundPos, groundHeights);
         groundCols = groundObj.getGroundCols();
 
-        Tank tank1Obj = new Tank(world, 0.45f, 0.1f);
-        Tank tank2Obj = new Tank(world, -0.45f, 0.1f);
+        tank1Obj = new Tank(world, 0.45f, 0.1f);
+        tank2Obj = new Tank(world, -0.45f, 0.1f);
         tank1 = tank1Obj.getTank();
         tank2 = tank2Obj.getTank();
 
@@ -146,7 +149,7 @@ public class GameScreen implements Screen {
             }
         });
 
-//        settingsWindow = new Windo/w("Settings", gameStage.getSkin());
+//        settingsWindow = new Window("Settings", gameStage.getSkin());
 
 //        ButtonGenerator buttongen = new ButtonGenerator();
 //        ImageTextButton settings = buttongen.createButton("SETTINGS");

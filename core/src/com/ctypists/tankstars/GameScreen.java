@@ -2,6 +2,7 @@ package com.ctypists.tankstars;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -55,6 +56,9 @@ public class GameScreen implements Screen {
 
     private State state = State.RUN;
     private boolean isPaused = false;
+    private boolean playerTurn = false; // false = player 1, true = player 2
+    // Player 1 is on the left, player 2 is on the right
+
     public GameScreen(Game game) {
         this.game = game;
 
@@ -64,15 +68,15 @@ public class GameScreen implements Screen {
 //        gameStage = new Stage(viewport, batch);
         buttongen = new ButtonGenerator();
 
-        Texture tank1Texture = new Texture(Gdx.files.internal("TankTexture1.png"));
-        tank1Texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        tank1Sprite = new Sprite(tank1Texture);
-        tank1Sprite.setScale(0.4f);
-        tank1Sprite.flip(true, false);
-        Texture tank2Texture = new Texture(Gdx.files.internal("TankTexture2.png"));
-        tank2Texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        tank2Sprite = new Sprite(tank2Texture);
-        tank2Sprite.setScale(0.4f);
+//        Texture tank1Texture = new Texture(Gdx.files.internal("TankTexture1.png"));
+//        tank1Texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+//        tank1Sprite = new Sprite(tank1Texture);
+//        tank1Sprite.setScale(0.4f);
+//        tank1Sprite.flip(true, false);
+//        Texture tank2Texture = new Texture(Gdx.files.internal("TankTexture2.png"));
+//        tank2Texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+//        tank2Sprite = new Sprite(tank2Texture);
+//        tank2Sprite.setScale(0.4f);
 
         Box2D.init();
         world = new World(new Vector2(0, -9.81f), true);
@@ -93,6 +97,8 @@ public class GameScreen implements Screen {
         tank2Obj = new Tank(world, -0.45f, 0.1f);
         tank1 = tank1Obj.getTank();
         tank2 = tank2Obj.getTank();
+        tank1Sprite = tank1Obj.getSprite();
+        tank2Sprite = tank2Obj.getSprite();
 
 //        font = new BitmapFont(Gdx.files.internal("font.fnt"));
 //        font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
@@ -202,6 +208,34 @@ public class GameScreen implements Screen {
 //                stepWorld();
 //                break;
 //        }
+
+        // tank movements and controls
+        if(Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)){
+            if(this.playerTurn) tank1.applyForceToCenter(-0.1f, 0, true);
+            else tank2.applyForceToCenter(-0.1f, 0, true);
+        }else if(Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
+            if(this.playerTurn) tank1.applyForceToCenter(0.1f, 0, true);
+            else tank2.applyForceToCenter(0.1f, 0, true);
+        }
+
+//        if(Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)){
+//            tank1.applyForceToCenter(0, 1, true);
+//        }else if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)){
+//            tank1.applyForceToCenter(0, -1, true);
+//        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
+            System.out.println("fire");
+            System.out.println(this.playerTurn);
+            if(this.playerTurn){
+                tank2Obj.fire();
+            }else{
+                tank1Obj.fire();
+            }
+            this.playerTurn = !this.playerTurn;
+            System.out.println(this.playerTurn);
+        }
+
         stepWorld();
 
         batch.begin();

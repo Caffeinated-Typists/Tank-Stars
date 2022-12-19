@@ -1,31 +1,64 @@
 package com.ctypists.tankstars;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.physics.box2d.*;
+//import com.codeandweb.physicseditor.PhysicsShapeCache;
+//import gdx-pe-loader-1.1.0.*;
+//import gdx-pe-loader-1.1.0.PhysicsShapeCache;
+//import com.codeandweb.physicseditor.PhysicsShapeCache;
+import com.ctypists.tankstars.physicseditor.PhysicsShapeCache;
+
+import java.util.ArrayList;
 
 public class  Tank{
 
     private Body tank;
     private World world;
+    private Sprite tankSprite;
+
+    private ArrayList<Projectile> projectiles;
 
     public Tank(World world, float x, float y){
         this.world = world;
-        BodyDef tankDef = new BodyDef();
-        tankDef.type = BodyDef.BodyType.DynamicBody;
-        tankDef.position.set(x, y);
-        tank = world.createBody(tankDef);
-        PolygonShape tankShape = new PolygonShape();
-        tankShape.setAsBox((float)0.02, (float)0.04);
-        FixtureDef tank2Fixture = new FixtureDef();
-        tank2Fixture.shape = tankShape;
-        tank2Fixture.density = 1;
-        tank2Fixture.friction = 1f;
-        tank2Fixture.restitution = -1f;
-        tank.createFixture(tank2Fixture);
-        tankShape.dispose();
+
+//        BodyDef tankDef = new BodyDef();
+//        tankDef.type = BodyDef.BodyType.DynamicBody;
+//        tankDef.position.set(x, y);
+//        tank = world.createBody(tankDef);
+//        PolygonShape tankShape = new PolygonShape();
+//        tankShape.setAsBox((float)0.02, (float)0.04);
+//        FixtureDef tankFixture = new FixtureDef();
+//        tankFixture.shape = tankShape;
+//        tankFixture.density = 1;
+//        tankFixture.friction = 1f;
+//        tankFixture.restitution = -1f;
+//        tank.createFixture(tankFixture);
+//        tankShape.dispose();
+
+        PhysicsShapeCache tankShapeCache = new PhysicsShapeCache("tank_hitbox.xml");
+        tank = tankShapeCache.createBody("TankTexture2", this.world, 0.0006f, 0.0012f);
+        tank.setTransform(x, y, 0);
+
+        Texture tankTexture = new Texture(Gdx.files.internal("TankTexture2.png"));
+        tankTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        tankSprite = new Sprite(tankTexture);
+        tankSprite.setScale(0.4f);
+
     }
 
     public Body getTank(){
         return this.tank;
+    }
+
+    public Sprite getSprite(){
+        return this.tankSprite;
+    }
+
+//    Modify function to accept a projectile object or name
+    public void fire(){
+
     }
 
 }

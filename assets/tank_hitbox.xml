@@ -8,7 +8,7 @@
 		<angular_damping>0</angular_damping>
 		<allow_sleep/>
 		<fixture>
-			<density>2.5</density>
+			<density>100</density>
 			<friction>0.5</friction>
 			<restitution>0</restitution>
 			<filter_category_bits>1</filter_category_bits>
@@ -39,7 +39,7 @@
 			<polygon>101.0000, 49.0000, 110.0000, 55.0000, 39.0000, 45.0000</polygon>
 		</fixture>
 		<fixture>
-			<density>2</density>
+			<density>100</density>
 			<friction>0</friction>
 			<restitution>0</restitution>
 			<filter_category_bits>1</filter_category_bits>
@@ -48,7 +48,7 @@
 			<circle x="27.000" y="20.000" r="20.000"/>
 		</fixture>
 		<fixture>
-			<density>2</density>
+			<density>100</density>
 			<friction>0</friction>
 			<restitution>0</restitution>
 			<filter_category_bits>1</filter_category_bits>
@@ -57,7 +57,7 @@
 			<circle x="124.800" y="19.800" r="20.000"/>
 		</fixture>
 		<fixture>
-			<density>2</density>
+			<density>100</density>
 			<friction>0</friction>
 			<restitution>0</restitution>
 			<filter_category_bits>1</filter_category_bits>
@@ -66,7 +66,7 @@
 			<circle x="52.200" y="17.800" r="20.000"/>
 		</fixture>
 		<fixture>
-			<density>2</density>
+			<density>100</density>
 			<friction>0</friction>
 			<restitution>0</restitution>
 			<filter_category_bits>1</filter_category_bits>
@@ -75,7 +75,7 @@
 			<circle x="103.800" y="18.600" r="20.000"/>
 		</fixture>
 		<fixture>
-			<density>2</density>
+			<density>100</density>
 			<friction>0</friction>
 			<restitution>0</restitution>
 			<filter_category_bits>1</filter_category_bits>
@@ -91,7 +91,7 @@
 		<angular_damping>0</angular_damping>
 		<allow_sleep/>
 		<fixture>
-			<density>2.5</density>
+			<density>100</density>
 			<friction>0.5</friction>
 			<restitution>0</restitution>
 			<filter_category_bits>1</filter_category_bits>
@@ -116,7 +116,7 @@
 			<polygon>113.0000, 58.0000, 110.0000, 64.0000, 87.0000, 93.0000, 18.0000, 4.0000</polygon>
 		</fixture>
 		<fixture>
-			<density>2</density>
+			<density>100</density>
 			<friction>0</friction>
 			<restitution>0</restitution>
 			<filter_category_bits>1</filter_category_bits>
@@ -125,7 +125,7 @@
 			<circle x="21.200" y="21.200" r="20.000"/>
 		</fixture>
 		<fixture>
-			<density>2</density>
+			<density>100</density>
 			<friction>0</friction>
 			<restitution>0</restitution>
 			<filter_category_bits>1</filter_category_bits>
@@ -134,7 +134,7 @@
 			<circle x="149.800" y="20.400" r="20.000"/>
 		</fixture>
 		<fixture>
-			<density>2</density>
+			<density>100</density>
 			<friction>0</friction>
 			<restitution>0</restitution>
 			<filter_category_bits>1</filter_category_bits>
@@ -143,7 +143,7 @@
 			<circle x="44.200" y="19.800" r="20.000"/>
 		</fixture>
 		<fixture>
-			<density>2</density>
+			<density>100</density>
 			<friction>0</friction>
 			<restitution>0</restitution>
 			<filter_category_bits>1</filter_category_bits>
@@ -152,7 +152,7 @@
 			<circle x="70.400" y="20.400" r="20.000"/>
 		</fixture>
 		<fixture>
-			<density>2</density>
+			<density>100</density>
 			<friction>0</friction>
 			<restitution>0</restitution>
 			<filter_category_bits>1</filter_category_bits>
@@ -161,7 +161,7 @@
 			<circle x="123.000" y="19.000" r="20.000"/>
 		</fixture>
 		<fixture>
-			<density>2</density>
+			<density>100</density>
 			<friction>0</friction>
 			<restitution>0</restitution>
 			<filter_category_bits>1</filter_category_bits>

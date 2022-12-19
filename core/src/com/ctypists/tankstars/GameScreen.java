@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2D;
@@ -19,7 +20,10 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 import java.util.ArrayList;
@@ -68,7 +72,7 @@ public class GameScreen implements Screen {
         camera = new OrthographicCamera();
         viewport = new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
 //        gameStage = new Stage(viewport, batch);
-        buttongen = new ButtonGenerator();
+//        buttongen = new ButtonGenerator();
 
 //        Texture tank1Texture = new Texture(Gdx.files.internal("TankTexture1.png"));
 //        tank1Texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
@@ -85,14 +89,16 @@ public class GameScreen implements Screen {
 
         debugRenderer = new Box2DDebugRenderer();
 
-        groundHeights = new ArrayList<Float>();
-        groundPos = new ArrayList<Float>();
-        for(float i = -1; i <= 1; i += 0.005){
-            groundPos.add(i);
-            groundHeights.add(0.3f);
+//        groundHeights = new ArrayList<Float>();
+//        groundPos = new ArrayList<Float>();
+//        for(float i = -1; i <= 1; i += 0.005){
+//            groundPos.add(i);
+////            groundHeights.add(0.3f);
 //            groundHeights.add((float)0.3 + (float)0.05 * (float)Math.sin(i * 10));
-        }
-        groundObj = new Ground(world, groundPos, groundHeights);
+//        }
+        groundObj = new Ground(world);
+        groundPos = groundObj.getGroundPos();
+        groundHeights = groundObj.getGroundHeights();
         groundCols = groundObj.getGroundCols();
 
 //      Pass an argument to define the tank being used
@@ -108,45 +114,45 @@ public class GameScreen implements Screen {
         font.getData().setScale(0.5f);
 
         // creating pause menu
-        pauseMenu = new PauseMenu();
-        pauseMenu.resumeButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-                if (isPaused){
-                    System.out.println("Resume button clicked");
-                    gameStage.getActors().removeValue(pauseMenu, true);
-                    isPaused = false;
-                }
-            }
-        });
+//        pauseMenu = new PauseMenu();
+//        pauseMenu.resumeButton.addListener(new ClickListener() {
+//            @Override
+//            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+//                if (isPaused){
+//                    System.out.println("Resume button clicked");
+//                    gameStage.getActors().removeValue(pauseMenu, true);
+//                    isPaused = false;
+//                }
+//            }
+//        });
 
-        buttongen.setNextScreen(pauseMenu.saveButton, new MainScreen(game), game);
-        buttongen.setNextScreen(pauseMenu.exitButton, new MainScreen(game), game);
+//        buttongen.setNextScreen(pauseMenu.saveButton, new MainScreen(game), game);
+//        buttongen.setNextScreen(pauseMenu.exitButton, new MainScreen(game), game);
 
 
 
         // fire button
-        fireButton = buttongen.createButton("FIRE", String.valueOf(Gdx.files.internal("fire.png")));
-        fireButton.setBounds(Gdx.graphics.getWidth() * 0.75f - fireButton.getWidth() / 2,
-                Gdx.graphics.getHeight() * 0.25f - fireButton.getHeight() / 2,
-                fireButton.getWidth() / 2,
-                fireButton.getHeight() / 2);
+//        fireButton = buttongen.createButton("FIRE", String.valueOf(Gdx.files.internal("fire.png")));
+//        fireButton.setBounds(Gdx.graphics.getWidth() * 0.75f - fireButton.getWidth() / 2,
+//                Gdx.graphics.getHeight() * 0.25f - fireButton.getHeight() / 2,
+//                fireButton.getWidth() / 2,
+//                fireButton.getHeight() / 2);
 
         // adding pause menu icon
-        Texture pauseIconTexture = new Texture(Gdx.files.internal("menuIcon.png"));
-        pauseIconTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        pauseIcon = new ImageButton(new TextureRegionDrawable(new TextureRegion(pauseIconTexture)));
-        pauseIcon.setBounds(10, Gdx.graphics.getHeight() - pauseIcon.getHeight()/2 - 10, pauseIcon.getWidth() / 2, pauseIcon.getHeight() / 2);
-        pauseIcon.addListener(new ClickListener() {
-            @Override
-            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-                System.out.println("pause");
-                if (!isPaused) {
-                    gameStage.addActor(pauseMenu);
-                    isPaused = true;
-                }
-            }
-        });
+//        Texture pauseIconTexture = new Texture(Gdx.files.internal("menuIcon.png"));
+//        pauseIconTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+//        pauseIcon = new ImageButton(new TextureRegionDrawable(new TextureRegion(pauseIconTexture)));
+//        pauseIcon.setBounds(10, Gdx.graphics.getHeight() - pauseIcon.getHeight()/2 - 10, pauseIcon.getWidth() / 2, pauseIcon.getHeight() / 2);
+//        pauseIcon.addListener(new ClickListener() {
+//            @Override
+//            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+//                System.out.println("pause");
+//                if (!isPaused) {
+//                    gameStage.addActor(pauseMenu);
+//                    isPaused = true;
+//                }
+//            }
+//        });
 
         // joystick
         joystickgen = new Joystick();
@@ -169,12 +175,12 @@ public class GameScreen implements Screen {
         healthBarL.setHealth(0.5f);
         healthBarR.setHealth(0.2f);
 
-        gameStage.addActor(fuelKnob);
-        gameStage.addActor(fireButton);
-        gameStage.addActor(pauseIcon);
-        gameStage.addActor(touchpad);
-        gameStage.addActor(healthBarR);
-        gameStage.addActor(healthBarL);
+//        gameStage.addActor(fuelKnob);
+//        gameStage.addActor(fireButton);
+//        gameStage.addActor(pauseIcon);
+//        gameStage.addActor(touchpad);
+//        gameStage.addActor(healthBarR);
+//        gameStage.addActor(healthBarL);
 
     }
 
@@ -187,7 +193,7 @@ public class GameScreen implements Screen {
         ground = new Texture(Gdx.files.internal("ground.png"));
         gamebackground.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         ground.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        Gdx.input.setInputProcessor(gameStage);
+//        Gdx.input.setInputProcessor(gameStage);
 //        pauseIcon.addListener(new ClickListener() {
 //            @Override
 //            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
@@ -214,11 +220,11 @@ public class GameScreen implements Screen {
 
         // tank movements and controls
         if(Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-            if(this.playerTurn) tank1.applyForceToCenter(-0.2f, 0, true);
-            else tank2.applyForceToCenter(-0.2f, 0, true);
+            if(this.playerTurn) tank1.applyForceToCenter(-1f, 0, true);
+            else tank2.applyForceToCenter(-1f, 0, true);
         }else if(Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-            if(this.playerTurn) tank1.applyForceToCenter(0.2f, 0, true);
-            else tank2.applyForceToCenter(0.2f, 0, true);
+            if(this.playerTurn) tank1.applyForceToCenter(1f, 0, true);
+            else tank2.applyForceToCenter(1f, 0, true);
         }
 
 //        if(Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)){

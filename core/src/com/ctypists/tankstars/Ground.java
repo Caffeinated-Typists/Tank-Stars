@@ -6,15 +6,35 @@ import java.util.ArrayList;
 
 public class Ground {
 
-    private World world;
-    private ArrayList<Float> groundPos;
+    private final World world;
+    private final ArrayList<Float> groundPos;
     private ArrayList<Float> groundHeights;
     private ArrayList<Body> groundCols;
 
-    public Ground(World world, ArrayList<Float> groundPos, ArrayList<Float> groundHeights) {
+    public Ground(World world) {
         this.world = world;
-        this.groundPos = groundPos;
-        this.groundHeights = groundHeights;
+
+        this.groundCols = new ArrayList<Body>();
+        this.groundPos = new ArrayList<Float>();
+        this.groundHeights = new ArrayList<Float>();
+
+        for(float i = -1; i < 1; i += 0.005){
+            groundPos.add(i);
+            if(i <= -0.9){
+                groundHeights.add(1.4f + i);
+            }else if(i <= -0.2){
+                groundHeights.add(0.5f);
+            }else if(i <= 0.1){
+                groundHeights.add(0.5f - 0.65f*(i + 0.2f));
+            }else if(i <= 0.2){
+                groundHeights.add(0.3f);
+            }else if(i <= 0.4){
+                groundHeights.add((i + 0.2f)/2 + 0.1f);
+            }else if(i <= 1){
+                groundHeights.add(0.4f);
+            }
+        }
+
         this.createGround();
     }
 
@@ -34,6 +54,14 @@ public class Ground {
             this.groundCols.add(groundCol);
             groundColShape.dispose();
         }
+    }
+
+    public ArrayList<Float> getGroundPos(){
+        return this.groundPos;
+    }
+
+    public ArrayList<Float> getGroundHeights(){
+        return this.groundHeights;
     }
 
     public ArrayList<Body> getGroundCols() {

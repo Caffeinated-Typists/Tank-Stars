@@ -83,8 +83,8 @@ public class GameScreen implements Screen {
         groundPos = new ArrayList<Float>();
         for(float i = -1; i <= 1; i += 0.005){
             groundPos.add(i);
-//            groundHeights.add(0.3f);
-            groundHeights.add((float)0.3 + (float)0.05 * (float)Math.sin(i * 10));
+            groundHeights.add(0.3f);
+//            groundHeights.add((float)0.3 + (float)0.05 * (float)Math.sin(i * 10));
         }
         groundObj = new Ground(world, groundPos, groundHeights);
         groundCols = groundObj.getGroundCols();
@@ -217,11 +217,11 @@ public class GameScreen implements Screen {
         renderGround();
 
         // tanks
-        tank1Sprite.setPosition(Gdx.graphics.getWidth()/2 + tank1.getPosition().x*(Gdx.graphics.getWidth()/2) - 90, Gdx.graphics.getHeight()/2 + tank1.getPosition().y*(Gdx.graphics.getHeight()/2) - 45);
+        tank1Sprite.setPosition(Gdx.graphics.getWidth()/2 + tank1.getPosition().x*(Gdx.graphics.getWidth()/2) - 55, Gdx.graphics.getHeight()/2 + tank1.getPosition().y*(Gdx.graphics.getHeight()/2) - 35);
 //        tank1Sprite.setRotation((float)Math.toDegrees(tank1.getAngle()));
         tank1Sprite.draw(batch);
 
-        tank2Sprite.setPosition(Gdx.graphics.getWidth()/2 + tank2.getPosition().x*(Gdx.graphics.getWidth()/2) - 90, Gdx.graphics.getHeight()/2 + tank2.getPosition().y*(Gdx.graphics.getHeight()/2) - 50);
+        tank2Sprite.setPosition(Gdx.graphics.getWidth()/2 + tank2.getPosition().x*(Gdx.graphics.getWidth()/2) - 55, Gdx.graphics.getHeight()/2 + tank2.getPosition().y*(Gdx.graphics.getHeight()/2) - 35);
 //        tank2Sprite.setRotation((float)Math.toDegrees(tank2.getAngle()));
         tank2Sprite.draw(batch);
 

@@ -93,6 +93,7 @@ public class GameScreen implements Screen {
         groundObj = new Ground(world, groundPos, groundHeights);
         groundCols = groundObj.getGroundCols();
 
+//      Pass an argument to define the tank being used
         tank1Obj = new Tank(world, 0.45f, 0.1f);
         tank2Obj = new Tank(world, -0.45f, 0.1f);
         tank1 = tank1Obj.getTank();
@@ -211,11 +212,11 @@ public class GameScreen implements Screen {
 
         // tank movements and controls
         if(Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-            if(this.playerTurn) tank1.applyForceToCenter(-0.1f, 0, true);
-            else tank2.applyForceToCenter(-0.1f, 0, true);
+            if(this.playerTurn) tank1.applyForceToCenter(-0.2f, 0, true);
+            else tank2.applyForceToCenter(-0.2f, 0, true);
         }else if(Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-            if(this.playerTurn) tank1.applyForceToCenter(0.1f, 0, true);
-            else tank2.applyForceToCenter(0.1f, 0, true);
+            if(this.playerTurn) tank1.applyForceToCenter(0.2f, 0, true);
+            else tank2.applyForceToCenter(0.2f, 0, true);
         }
 
 //        if(Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)){
@@ -225,15 +226,12 @@ public class GameScreen implements Screen {
 //        }
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
-            System.out.println("fire");
-            System.out.println(this.playerTurn);
             if(this.playerTurn){
                 tank2Obj.fire();
             }else{
                 tank1Obj.fire();
             }
             this.playerTurn = !this.playerTurn;
-            System.out.println(this.playerTurn);
         }
 
         stepWorld();

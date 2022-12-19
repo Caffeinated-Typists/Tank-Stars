@@ -15,6 +15,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
@@ -28,9 +29,9 @@ public class GameScreen implements Screen {
     private static final int VELOCITY_ITERATIONS = 6;
     private static final int POSITION_ITERATIONS = 2;
 
-    Game game;
-    SpriteBatch batch;
-    Texture gamebackground, ground, healthBarL, healthBarR, joystick, fuel;
+    private Game game;
+    private SpriteBatch batch;
+    private Texture gamebackground, ground, joystick, fuel;
     private OrthographicCamera camera;
     private ExtendViewport viewport;
     private Stage gameStage;
@@ -42,6 +43,7 @@ public class GameScreen implements Screen {
     private ButtonGenerator buttongen;
     private BitmapFont font;
     private Joystick joystickgen;
+    private HealthBar healthBarL, healthBarR;
 
     private World world;
     private Box2DDebugRenderer debugRenderer;
@@ -101,64 +103,79 @@ public class GameScreen implements Screen {
         tank1Sprite = tank1Obj.getSprite();
         tank2Sprite = tank2Obj.getSprite();
 
-//        font = new BitmapFont(Gdx.files.internal("font.fnt"));
-//        font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-//        font.getData().setScale(0.5f);
-//
-//        // creating pause menu
-//        pauseMenu = new PauseMenu();
-//        pauseMenu.resumeButton.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-//                if (isPaused){
-//                    System.out.println("Resume button clicked");
-//                    gameStage.getActors().removeValue(pauseMenu, true);
-//                    isPaused = false;
-//                }
-//            }
-//        });
-//
-//        buttongen.setNextScreen(pauseMenu.saveButton, new MainScreen(game), game);
-//        buttongen.setNextScreen(pauseMenu.exitButton, new MainScreen(game), game);
-//
-//
-//
-//        // fire button
-//        fireButton = buttongen.createButton("FIRE", String.valueOf(Gdx.files.internal("fire.png")));
-//        fireButton.setBounds(Gdx.graphics.getWidth() * 0.75f - fireButton.getWidth() / 2,
-//                Gdx.graphics.getHeight() * 0.25f - fireButton.getHeight() / 2,
-//                fireButton.getWidth() / 2,
-//                fireButton.getHeight() / 2);
-//        // adding pause menu icon
-//        Texture pauseIconTexture = new Texture(Gdx.files.internal("menuIcon.png"));
-//        pauseIconTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-//        pauseIcon = new ImageButton(new TextureRegionDrawable(new TextureRegion(pauseIconTexture)));
-//        pauseIcon.setBounds(10, Gdx.graphics.getHeight() - pauseIcon.getHeight()/2 - 10, pauseIcon.getWidth() / 2, pauseIcon.getHeight() / 2);
-//        pauseIcon.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-//                System.out.println("pause");
-//                if (!isPaused) {
-//                    gameStage.addActor(pauseMenu);
-//                    isPaused = true;
-//                }
-//            }
-//        });
-//
-//        // joystick
-//        joystickgen = new Joystick();
-//        Touchpad touchpad = joystickgen.getTouchpad();
-//        touchpad.setBounds(Gdx.graphics.getWidth() - touchpad.getWidth() - 10, 10, touchpad.getWidth(), touchpad.getHeight());
-//        touchpad.setResetOnTouchUp(false);
-//
-//        // fuel knob
-//        Touchpad fuelKnob = joystickgen.getFuelTouchpad();
-//        fuelKnob.setBounds(10, 10, 100, 50);
-//
-//        gameStage.addActor(fuelKnob);
-//        gameStage.addActor(fireButton);
-//        gameStage.addActor(pauseIcon);
-//        gameStage.addActor(touchpad);
+        font = new BitmapFont(Gdx.files.internal("font.fnt"));
+        font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        font.getData().setScale(0.5f);
+
+        // creating pause menu
+        pauseMenu = new PauseMenu();
+        pauseMenu.resumeButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+                if (isPaused){
+                    System.out.println("Resume button clicked");
+                    gameStage.getActors().removeValue(pauseMenu, true);
+                    isPaused = false;
+                }
+            }
+        });
+
+        buttongen.setNextScreen(pauseMenu.saveButton, new MainScreen(game), game);
+        buttongen.setNextScreen(pauseMenu.exitButton, new MainScreen(game), game);
+
+
+
+        // fire button
+        fireButton = buttongen.createButton("FIRE", String.valueOf(Gdx.files.internal("fire.png")));
+        fireButton.setBounds(Gdx.graphics.getWidth() * 0.75f - fireButton.getWidth() / 2,
+                Gdx.graphics.getHeight() * 0.25f - fireButton.getHeight() / 2,
+                fireButton.getWidth() / 2,
+                fireButton.getHeight() / 2);
+
+        // adding pause menu icon
+        Texture pauseIconTexture = new Texture(Gdx.files.internal("menuIcon.png"));
+        pauseIconTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        pauseIcon = new ImageButton(new TextureRegionDrawable(new TextureRegion(pauseIconTexture)));
+        pauseIcon.setBounds(10, Gdx.graphics.getHeight() - pauseIcon.getHeight()/2 - 10, pauseIcon.getWidth() / 2, pauseIcon.getHeight() / 2);
+        pauseIcon.addListener(new ClickListener() {
+            @Override
+            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+                System.out.println("pause");
+                if (!isPaused) {
+                    gameStage.addActor(pauseMenu);
+                    isPaused = true;
+                }
+            }
+        });
+
+        // joystick
+        joystickgen = new Joystick();
+        Touchpad touchpad = joystickgen.getTouchpad();
+        touchpad.setBounds(Gdx.graphics.getWidth() - touchpad.getWidth() - 10, 10, touchpad.getWidth(), touchpad.getHeight());
+        touchpad.setResetOnTouchUp(false);
+
+        // fuel knob
+        Touchpad fuelKnob = joystickgen.getFuelTouchpad();
+        fuelKnob.setBounds(10, 10, 100, 50);
+
+        // health bar experiment
+        HealthBar healthBarL = new HealthBar(), healthBarR = new HealthBar();
+        healthBarL.HealthBarL();
+        healthBarR.HealthBarR();
+
+        healthBarR.setBounds(TankStars.WIDTH/2f + 50, TankStars.HEIGHT - 10 - healthBarL.getHeight(), healthBarR.getWidth(), healthBarR.getHeight());
+        healthBarL.setBounds(TankStars.WIDTH/2f - healthBarL.getWidth() - 50, TankStars.HEIGHT - 10 - healthBarL.getHeight(), healthBarL.getWidth(), healthBarL.getHeight());
+
+        healthBarL.setHealth(0.5f);
+        healthBarR.setHealth(0.2f);
+
+        gameStage.addActor(fuelKnob);
+        gameStage.addActor(fireButton);
+        gameStage.addActor(pauseIcon);
+        gameStage.addActor(touchpad);
+        gameStage.addActor(healthBarR);
+        gameStage.addActor(healthBarL);
+
     }
 
     @Override
@@ -167,12 +184,8 @@ public class GameScreen implements Screen {
 //        fuel = new Texture(Gdx.files.internal("fuel.png"));
         joystick = new Texture(Gdx.files.internal("aim.png"));
         gamebackground = new Texture(Gdx.files.internal("gameBackground.png"));
-        healthBarL = new Texture(Gdx.files.internal("HealthBarL.png"));
-        healthBarR = new Texture(Gdx.files.internal("HealthBarR.png"));
         ground = new Texture(Gdx.files.internal("ground.png"));
         gamebackground.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        healthBarL.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        healthBarR.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         ground.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         Gdx.input.setInputProcessor(gameStage);
 //        pauseIcon.addListener(new ClickListener() {
@@ -180,17 +193,6 @@ public class GameScreen implements Screen {
 //            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
 //                System.out.println("pause");
 //                gameStage.addActor(pauseMenu);
-//            }
-//        });
-
-//        settingsWindow = new Window("Settings", gameStage.getSkin());
-
-//        ButtonGenerator buttongen = new ButtonGenerator();
-//        ImageTextButton settings = buttongen.createButton("SETTINGS");
-//        settings.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(InputEvent event, float x, float y) {
-//                settingsWindow = new Window();
 //            }
 //        });
 
@@ -241,9 +243,6 @@ public class GameScreen implements Screen {
         // background
         batch.draw(gamebackground, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        //health bars
-        batch.draw(healthBarL, TankStars.WIDTH/2f - healthBarL.getWidth() - 50, TankStars.HEIGHT - 10 - healthBarL.getHeight(), healthBarL.getWidth(), healthBarL.getHeight());
-        batch.draw(healthBarR, TankStars.WIDTH/2f + 50, TankStars.HEIGHT - 10 - healthBarR.getHeight(), healthBarR.getWidth(), healthBarR.getHeight());
 
         // Ground
         renderGround();

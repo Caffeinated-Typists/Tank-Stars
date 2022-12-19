@@ -2,14 +2,15 @@ package com.ctypists.tankstars;
 
 import com.badlogic.gdx.physics.box2d.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Ground {
+public class Ground implements Serializable {
 
-    private World world;
+    private transient World world;
     private ArrayList<Float> groundPos;
     private ArrayList<Float> groundHeights;
-    private ArrayList<Body> groundCols;
+    private transient ArrayList<Body> groundCols;
 
     public Ground(World world, ArrayList<Float> groundPos, ArrayList<Float> groundHeights) {
         this.world = world;

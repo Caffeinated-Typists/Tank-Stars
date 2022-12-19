@@ -33,9 +33,7 @@ public class PauseMenu extends Table {
         setFillParent(true);
 //        setBounds(0, 0, backgroundTexture.getWidth() / 2f, backgroundTexture.getHeight() / 2f);
         buttonGenerator = new ButtonGenerator();
-        resumeButton = buttonGenerator.createButton("RESUME");
-        saveButton = buttonGenerator.createButton("SAVE");
-        exitButton = buttonGenerator.createButton("EXIT");
+
         add(resumeButton);
         row();
         add(saveButton).padTop(20);

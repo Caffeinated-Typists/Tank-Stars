@@ -2,10 +2,12 @@ package com.ctypists.tankstars;
 
 import com.badlogic.gdx.physics.box2d.*;
 
-public class Projectile {
+import java.io.Serializable;
 
-    private Body projectile;
-    private final World world;
+public class Projectile implements Serializable {
+
+    private transient Body projectile;
+    private transient final World world;
     private final Integer damage;
 
     public Projectile(World world, float x, float y, Integer damage){

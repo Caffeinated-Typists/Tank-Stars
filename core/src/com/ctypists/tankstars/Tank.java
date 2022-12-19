@@ -10,32 +10,19 @@ import com.badlogic.gdx.physics.box2d.*;
 //import com.codeandweb.physicseditor.PhysicsShapeCache;
 import com.ctypists.tankstars.physicseditor.PhysicsShapeCache;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class  Tank{
+public class  Tank implements Serializable {
 
-    private Body tank;
-    private World world;
-    private Sprite tankSprite;
+    private transient Body tank;
+    private transient World world;
+    private transient Sprite tankSprite;
 
     private ArrayList<Projectile> projectiles;
 
     public Tank(World world, float x, float y){
         this.world = world;
-
-//        BodyDef tankDef = new BodyDef();
-//        tankDef.type = BodyDef.BodyType.DynamicBody;
-//        tankDef.position.set(x, y);
-//        tank = world.createBody(tankDef);
-//        PolygonShape tankShape = new PolygonShape();
-//        tankShape.setAsBox((float)0.02, (float)0.04);
-//        FixtureDef tankFixture = new FixtureDef();
-//        tankFixture.shape = tankShape;
-//        tankFixture.density = 1;
-//        tankFixture.friction = 1f;
-//        tankFixture.restitution = -1f;
-//        tank.createFixture(tankFixture);
-//        tankShape.dispose();
 
         PhysicsShapeCache tankShapeCache = new PhysicsShapeCache("tank_hitbox.xml");
         tank = tankShapeCache.createBody("TankTexture2", this.world, 0.0006f, 0.0012f);

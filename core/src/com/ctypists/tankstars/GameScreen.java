@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2D;
@@ -19,7 +20,10 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 import java.util.ArrayList;
@@ -69,18 +73,9 @@ public class GameScreen implements Screen {
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
         viewport = new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
-//        gameStage = new Stage(viewport, batch);
+        gameStage = new Stage(viewport, batch);
         buttongen = new ButtonGenerator();
 
-//        Texture tank1Texture = new Texture(Gdx.files.internal("TankTexture1.png"));
-//        tank1Texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-//        tank1Sprite = new Sprite(tank1Texture);
-//        tank1Sprite.setScale(0.4f);
-//        tank1Sprite.flip(true, false);
-//        Texture tank2Texture = new Texture(Gdx.files.internal("TankTexture2.png"));
-//        tank2Texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-//        tank2Sprite = new Sprite(tank2Texture);
-//        tank2Sprite.setScale(0.4f);
 
         Box2D.init();
         world = new World(new Vector2(0, -9.81f), true);
@@ -110,20 +105,20 @@ public class GameScreen implements Screen {
         font.getData().setScale(0.5f);
 
         // creating pause menu
-        pauseMenu = new PauseMenu();
-        pauseMenu.resumeButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-                if (isPaused){
-                    System.out.println("Resume button clicked");
-                    gameStage.getActors().removeValue(pauseMenu, true);
-                    isPaused = false;
-                }
-            }
-        });
+//        pauseMenu = new PauseMenu();
+//        pauseMenu.resumeButton.addListener(new ClickListener() {
+//            @Override
+//            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+//                if (isPaused){
+//                    System.out.println("Resume button clicked");
+//                    gameStage.getActors().removeValue(pauseMenu, true);
+//                    isPaused = false;
+//                }
+//            }
+//        });
 
-        buttongen.setNextScreen(pauseMenu.saveButton, new MainScreen(game), game);
-        buttongen.setNextScreen(pauseMenu.exitButton, new MainScreen(game), game);
+//        buttongen.setNextScreen(pauseMenu.saveButton, new MainScreen(game), game);
+//        buttongen.setNextScreen(pauseMenu.exitButton, new MainScreen(game), game);
 
 
 
@@ -141,16 +136,17 @@ public class GameScreen implements Screen {
         pauseIconTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         pauseIcon = new ImageButton(new TextureRegionDrawable(new TextureRegion(pauseIconTexture)));
         pauseIcon.setBounds(10, Gdx.graphics.getHeight() - pauseIcon.getHeight()/2 - 10, pauseIcon.getWidth() / 2, pauseIcon.getHeight() / 2);
-        pauseIcon.addListener(new ClickListener() {
-            @Override
-            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-                System.out.println("pause");
-                if (!isPaused) {
-                    gameStage.addActor(pauseMenu);
-                    isPaused = true;
-                }
-            }
-        });
+//        pauseIcon.addListener(new ClickListener() {
+//            @Override
+//            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+//                System.out.println("pause");
+//                if (!isPaused) {
+//                    gameStage.addActor(pauseMenu);
+//                    isPaused = true;
+//                }
+//            }
+//        });
+        buttongen.setNextScreen(pauseIcon, new PauseMenuAlt(game, this), game);
 
         // joystick
         joystickgen = new Joystick();
@@ -262,8 +258,8 @@ public class GameScreen implements Screen {
         batch.draw(fuelTexture, 0, 0);
         batch.end();
 
-//        gameStage.draw();
-//        gameStage.act();
+        gameStage.draw();
+        gameStage.act();
 //        Comment or uncomment this line to see the polygons
         debugRenderer.render(world, camera.combined);
 

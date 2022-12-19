@@ -60,6 +60,10 @@ project(":core") {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-ai:$aiVersion"
-        
+        runtimeOnly files("libs/gdx-pe-1.0.0.jar")
+        runtimeOnly fileTree('libs') { include '*.jar' }
+//        compile fileTree(dir: 'libs', include: '*.jar')
+        implementation fileTree(dir: "libs", include: ["*.jar"])
+//        implementation name: 'com.codeandweb.physicseditor:gdx-pe-loader-1.1.0'
     }
 }

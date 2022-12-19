@@ -13,7 +13,7 @@ public class Joystick {
 
     public Joystick() {
         touchpadStyle = new Touchpad.TouchpadStyle();
-        Texture touchpadBackground = new Texture("joystick_bg_2.png");
+        Texture touchpadBackground = new Texture("joystick_bg.png");
         Texture touchpadKnob = new Texture("joystick_knob.png");
         touchpadBackground.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         touchpadKnob.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
@@ -36,7 +36,7 @@ public class Joystick {
         fuelTouchpadStyle.background = new TextureRegionDrawable(touchpadBackgroundRegion);
         fuelTouchpadStyle.knob = new TextureRegionDrawable(fuel_knob_region);
 
-        fuel_touchpad = new Touchpad(10, fuelTouchpadStyle);
+        fuel_touchpad = new Touchpad(15, fuelTouchpadStyle);
     }
 
     public Touchpad getTouchpad() {

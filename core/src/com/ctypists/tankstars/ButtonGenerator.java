@@ -27,6 +27,7 @@ public class ButtonGenerator {
         imageDrawable = new TextureRegionDrawable(new TextureRegion(image));
         font = new BitmapFont(Gdx.files.internal("font.fnt"));
         font.setColor(1, 1, 1, 1);
+        font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         mystyle = new ImageTextButtonStyle();
         mystyle.font = font;
         mystyle.up = imageDrawable;
@@ -38,6 +39,9 @@ public class ButtonGenerator {
 
     }
 
+    public void setScalableButton(ImageTextButton button, float scale) {
+        button.getLabel().setFontScale(scale);
+    }
 
     public void setNextScreen(ImageTextButton button, final Screen screen, final Game game){
         button.addListener(new ClickListener(){

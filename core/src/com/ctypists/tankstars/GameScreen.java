@@ -35,6 +35,7 @@ public class GameScreen implements Screen {
     private Game game;
     private SpriteBatch batch;
     private Texture gamebackground, ground, joystick, fuel;
+    private TextureRegion fuelTexture;
     private OrthographicCamera camera;
     private ExtendViewport viewport;
     private Stage gameStage;
@@ -47,6 +48,7 @@ public class GameScreen implements Screen {
     private BitmapFont font;
     private Joystick joystickgen;
     private HealthBar healthBarL, healthBarR;
+    private float fuel_level = 0.7f;
 
     private World world;
     private Box2DDebugRenderer debugRenderer;
@@ -90,7 +92,7 @@ public class GameScreen implements Screen {
         for(float i = -1; i <= 1; i += 0.005){
             groundPos.add(i);
 //            groundHeights.add(0.3f);
-            groundHeights.add((float)0.3 + (float)0.05 * (float)Math.sin(i * 10));
+            groundHeights.add(0.45f + 0.05f * (float)Math.sin(i * 10));
         }
         groundObj = new Ground(world, groundPos, groundHeights);
         groundCols = groundObj.getGroundCols();
@@ -124,10 +126,12 @@ public class GameScreen implements Screen {
 
         // fire button
         fireButton = buttongen.createButton("FIRE", String.valueOf(Gdx.files.internal("fire.png")));
-        fireButton.setBounds(Gdx.graphics.getWidth() * 0.75f - fireButton.getWidth() / 2,
-                Gdx.graphics.getHeight() * 0.25f - fireButton.getHeight() / 2,
-                fireButton.getWidth() / 2,
-                fireButton.getHeight() / 2);
+        fireButton.setBounds(Gdx.graphics.getWidth() * 0.7f - fireButton.getWidth() / 2,
+                Gdx.graphics.getHeight() * 0.3f - fireButton.getHeight() / 2,
+                fireButton.getWidth() / 1.75f,
+                fireButton.getHeight() / 1.75f);
+//        fireButton.getData().setScale(0.5f);
+        buttongen.setScalableButton(fireButton, 1.15f);
 
         // adding pause menu icon
         Texture pauseIconTexture = new Texture(Gdx.files.internal("menuIcon.png"));
@@ -148,12 +152,10 @@ public class GameScreen implements Screen {
         // joystick
         joystickgen = new Joystick();
         Touchpad touchpad = joystickgen.getTouchpad();
-        touchpad.setBounds(Gdx.graphics.getWidth() - touchpad.getWidth() - 10, 10, touchpad.getWidth(), touchpad.getHeight());
-        touchpad.setResetOnTouchUp(false);
+        touchpad.setBounds(Gdx.graphics.getWidth() - touchpad.getWidth() - 20, 20, touchpad.getWidth(), touchpad.getHeight());
+        touchpad.setResetOnTouchUp(true);
 
-        // fuel knob
-        Touchpad fuelKnob = joystickgen.getFuelTouchpad();
-        fuelKnob.setBounds(10, 10, 100, 50);
+
 
         // health bar experiment
         HealthBar healthBarL = new HealthBar(), healthBarR = new HealthBar();
@@ -166,7 +168,6 @@ public class GameScreen implements Screen {
         healthBarL.setHealth(0.5f);
         healthBarR.setHealth(0.2f);
 
-        gameStage.addActor(fuelKnob);
         gameStage.addActor(fireButton);
         gameStage.addActor(pauseIcon);
         gameStage.addActor(touchpad);
@@ -179,6 +180,7 @@ public class GameScreen implements Screen {
     public void show() {
         // Textures
         fuel = new Texture(Gdx.files.internal("fuel.png"));
+        fuelTexture = new TextureRegion(fuel, 0, 0, fuel.getWidth()  / 2, fuel.getHeight());
         joystick = new Texture(Gdx.files.internal("aim.png"));
         gamebackground = new Texture(Gdx.files.internal("gameBackground.png"));
         ground = new Texture(Gdx.files.internal("ground.png"));
@@ -192,7 +194,6 @@ public class GameScreen implements Screen {
                 gameStage.addActor(pauseMenu);
             }
         });
-
 
     }
 
@@ -228,9 +229,9 @@ public class GameScreen implements Screen {
 //        tank2Sprite.setRotation((float)Math.toDegrees(tank2.getAngle()));
         tank2Sprite.draw(batch);
 
-//        batch.draw(fuel, 100, 30, fuel.getWidth()/3f, fuel.getHeight()/3f);
-
 //        font.draw(batch, "FUEL", 100 + fuel.getWidth() / 3f, 30 + fuel.getHeight() / 3f);
+        fuelTexture.setRegionWidth((int) (fuel.getWidth() * fuel_level));
+        batch.draw(fuelTexture, 0, 0);
         batch.end();
 
         gameStage.draw();

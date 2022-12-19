@@ -8,6 +8,11 @@ import com.badlogic.gdx.graphics.GL20;
 public class LoadScreen implements Screen {
     Game game;
     MainScreen mainScreen;
+    ButtonGenerator buttongen;
+    public LoadScreen(Game game, MainScreen mainScreen) {
+        this.game = game;
+        this.mainScreen = mainScreen;
+    }
 
     public LoadScreen(Game game, MainScreen mainScreen) {
         this.game = game;

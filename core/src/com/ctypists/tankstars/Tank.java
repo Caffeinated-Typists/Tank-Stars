@@ -4,12 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.physics.box2d.*;
-//import com.codeandweb.physicseditor.PhysicsShapeCache;
-//import gdx-pe-loader-1.1.0.*;
-//import gdx-pe-loader-1.1.0.PhysicsShapeCache;
-//import com.codeandweb.physicseditor.PhysicsShapeCache;
 import com.ctypists.tankstars.physicseditor.PhysicsShapeCache;
-
 import java.util.ArrayList;
 
 public class  Tank{
@@ -44,7 +39,9 @@ public class  Tank{
         Texture tankTexture = new Texture(Gdx.files.internal("TankTexture2.png"));
         tankTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         tankSprite = new Sprite(tankTexture);
-        tankSprite.setScale(0.4f);
+        tankSprite.setSize(0.11f, 0.14f);
+        tankSprite.setOrigin(tankSprite.getWidth()/2, tankSprite.getHeight()/2);
+        tank.setUserData(tankSprite);
 
     }
 

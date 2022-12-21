@@ -18,13 +18,14 @@ public class Joystick {
         touchpadBackground.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         touchpadKnob.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
+
+
         TextureRegion touchpadBackgroundRegion = new TextureRegion(touchpadBackground);
         TextureRegion touchpadKnobRegion = new TextureRegion(touchpadKnob);
 
 
         touchpadStyle.background = new TextureRegionDrawable(touchpadBackgroundRegion);
         touchpadStyle.knob = new TextureRegionDrawable(touchpadKnobRegion);
-
         touchpad = new Touchpad(10, touchpadStyle);
 
         // fuel_knob

@@ -87,7 +87,7 @@ public class GameScreen implements Screen {
         batch = new SpriteBatch();
         camera = new OrthographicCamera(Gdx.graphics.getWidth()/672f, Gdx.graphics.getHeight()/310.5f);
         viewport = new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
-//        gameStage = new Stage(viewport, batch);
+        gameStage = new Stage();
         buttongen = new ButtonGenerator();
 
 
@@ -119,25 +119,27 @@ public class GameScreen implements Screen {
 
         // fire button
         fireButton = buttongen.createButton("FIRE", String.valueOf(Gdx.files.internal("fire.png")));
-        fireButton.setBounds(Gdx.graphics.getWidth() * 0.7f - fireButton.getWidth() / 2,
-                Gdx.graphics.getHeight() * 0.3f - fireButton.getHeight() / 2,
-                fireButton.getWidth() / 1.75f,
-                fireButton.getHeight() / 1.75f);
+        fireButton.setBounds(((Gdx.graphics.getWidth() * 0.7f - fireButton.getWidth() / 2) / scaleX) - 1 ,
+                ((Gdx.graphics.getHeight() * 0.3f - fireButton.getHeight() / 2) / scaleY) - 1,
+                (fireButton.getWidth() / scaleX) / 1.75f,
+                (fireButton.getHeight() / scaleY)/1.75f);
 //        fireButton.getData().setScale(0.5f);
-        buttongen.setScalableButton(fireButton, 1.15f);
+        buttongen.setScalableButton(fireButton, 0.03f);
 
         // adding pause menu icon
         Texture pauseIconTexture = new Texture(Gdx.files.internal("menuIcon.png"));
         pauseIconTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         pauseIcon = new ImageButton(new TextureRegionDrawable(new TextureRegion(pauseIconTexture)));
-        pauseIcon.setBounds(10, Gdx.graphics.getHeight() - pauseIcon.getHeight()/2 - 10, pauseIcon.getWidth() / 2, pauseIcon.getHeight() / 2);
+        pauseIcon.setBounds((10) / scaleX - 1f, (Gdx.graphics.getHeight() - pauseIcon.getHeight()/2 - 10) / scaleY - 1 , pauseIcon.getWidth() / 2, pauseIcon.getHeight() / 2);
+        pauseIcon.setTransform(true);
+        pauseIcon.setScale(scalingX, scalingY);
 
         buttongen.setNextScreen(pauseIcon, new PauseMenuAlt(game, this), game);
 
         // joystick
         joystickgen = new Joystick();
         Touchpad touchpad = joystickgen.getTouchpad();
-        touchpad.setBounds(Gdx.graphics.getWidth() - touchpad.getWidth() - 20, 20, touchpad.getWidth(), touchpad.getHeight());
+        touchpad.setBounds((Gdx.graphics.getWidth() - touchpad.getWidth() - 20) / scaleX - 1, 20 / scaleY - 1, touchpad.getWidth() * scaleX, touchpad.getHeight() * scaleY);
         touchpad.setResetOnTouchUp(true);
 
 
@@ -148,16 +150,17 @@ public class GameScreen implements Screen {
         healthBarR.HealthBarR();
 
         healthBarR.setBounds(TankStars.WIDTH/2f + 50, TankStars.HEIGHT - 10 - healthBarL.getHeight(), healthBarR.getWidth(), healthBarR.getHeight());
-        healthBarL.setBounds(TankStars.WIDTH/2f - healthBarL.getWidth() - 50, TankStars.HEIGHT - 10 - healthBarL.getHeight(), healthBarL.getWidth(), healthBarL.getHeight());
-
+        healthBarL.setBounds((TankStars.WIDTH/2f - healthBarL.getWidth() - 50) * scalingX - 1, (TankStars.HEIGHT - 10 - healthBarL.getHeight()) * scalingY - 1, healthBarL.getWidth() /scaleX, healthBarL.getHeight() / scaleY);
+//        healthBarL.set
+//        healthBarL.setScale(scalingX * scalingX, scalingY * scalingY);
         healthBarL.setHealth(0.5f);
         healthBarR.setHealth(0.2f);
 
-//        gameStage.addActor(fireButton);
-//        gameStage.addActor(pauseIcon);
+        gameStage.addActor(fireButton);
+        gameStage.addActor(pauseIcon);
 //        gameStage.addActor(touchpad);
-//        gameStage.addActor(healthBarR);
-//        gameStage.addActor(healthBarL);
+        gameStage.addActor(healthBarR);
+        gameStage.addActor(healthBarL);
 
     }
 
@@ -238,6 +241,7 @@ public class GameScreen implements Screen {
 //        System.out.println(camera.position);
 
         batch.setProjectionMatrix(camera.combined);
+        gameStage.setViewport(viewport);
         batch.begin();
 
         // background
@@ -265,8 +269,8 @@ public class GameScreen implements Screen {
 //        batch.draw(fuelTexture, 0, 0);
         batch.end();
 
-//        gameStage.draw();
-//        gameStage.act();
+        gameStage.draw();
+        gameStage.act();
 //        Comment or uncomment this line to see the polygons
         debugRenderer.render(world, camera.combined);
 //        save_game();

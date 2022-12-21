@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -31,7 +32,7 @@ public class TankMenu implements Screen {
     private ExtendViewport viewport;
     private ArrayList<Texture> tanks;
     private int p1_tank, p2_tank;
-
+    private BitmapFont text;
     public TankMenu(TankStars game, MainScreen mainScreen) {
         this.game = game;
         this.mainScreen = mainScreen;
@@ -121,8 +122,8 @@ public class TankMenu implements Screen {
         // creating play and back button
         playButton = buttongen.createButton("PLAY");
         backButton = buttongen.createButton("BACK");
-        playButton.setPosition(Gdx.graphics.getWidth() * 0.75f - playButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f - playButton.getHeight() / 2 - 100);
-        backButton.setPosition(Gdx.graphics.getWidth() * 0.75f - backButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f - backButton.getHeight() - 150);
+        playButton.setPosition(Gdx.graphics.getWidth() * 0.5f - playButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f - playButton.getHeight() / 2 - 100);
+        backButton.setPosition(Gdx.graphics.getWidth() * 0.5f - backButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f - backButton.getHeight() - 150);
 
         //adding listeners to buttons
         buttongen.setNextScreen(playButton, new GameScreen(game), game);
@@ -131,6 +132,8 @@ public class TankMenu implements Screen {
         menuStage.addActor(playButton);
         menuStage.addActor(backButton);
 //        menuStage.addActor(pauseMenu);
+
+        text = new BitmapFont(Gdx.files.internal("new.fnt"));
 
     }
 
@@ -143,7 +146,8 @@ public class TankMenu implements Screen {
         menuBatch.begin();
         menuBatch.draw(gamebackground, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-
+        text.draw(menuBatch, "Player 1", Gdx.graphics.getWidth() / 4f - 100, Gdx.graphics.getHeight() - 100);
+        text.draw(menuBatch, "Player 2", 3 * Gdx.graphics.getWidth() / 4f - 20, Gdx.graphics.getHeight() - 100);
 
         menuBatch.draw((tanks.get(p1_tank)),  100, Gdx.graphics.getHeight()/2f - tanks.get(p1_tank).getHeight()/2f, tanks.get(p1_tank).getWidth(), tanks.get(p1_tank).getHeight());
         menuBatch.draw((tanks.get(p2_tank)),  Gdx.graphics.getWidth() - tanks.get(p2_tank).getWidth() - 100, Gdx.graphics.getHeight()/2f - tanks.get(p2_tank).getHeight()/2f, tanks.get(p2_tank).getWidth(), tanks.get(p2_tank).getHeight());

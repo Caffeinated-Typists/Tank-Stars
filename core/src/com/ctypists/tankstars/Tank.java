@@ -10,10 +10,9 @@ import java.util.ArrayList;
 
 public class  Tank{
 
-    private Body tank;
-    private World world;
-    private Sprite tankSprite;
-
+    private final Body tank;
+    private final World world;
+    private final Sprite tankSprite;
     private ArrayList<Projectile> projectiles;
 
     public Tank(World world, float x, float y, String SpritePath, boolean playerSide){
@@ -31,7 +30,7 @@ public class  Tank{
         tankBoxFixture.density = 10;
         tankBoxFixture.friction = 0.1f;
         tankBoxFixture.restitution = 0f;
-        tank.createFixture(tankBoxFixture);
+        tank.createFixture(tankBoxFixture).setUserData(this);
         tankBoxShape.dispose();
 
         CircleShape tankLeftWheelShape = new CircleShape();
@@ -42,7 +41,7 @@ public class  Tank{
         tankLeftWheelFixture.density = 10;
         tankLeftWheelFixture.friction = 0.1f;
         tankLeftWheelFixture.restitution = 0f;
-        tank.createFixture(tankLeftWheelFixture);
+        tank.createFixture(tankLeftWheelFixture).setUserData(this);
         tankLeftWheelShape.dispose();
 
         CircleShape tankRightWheelShape = new CircleShape();
@@ -53,12 +52,8 @@ public class  Tank{
         tankRightWheelFixture.density = 10;
         tankRightWheelFixture.friction = 0.1f;
         tankRightWheelFixture.restitution = 0f;
-        tank.createFixture(tankRightWheelFixture);
+        tank.createFixture(tankRightWheelFixture).setUserData(this);
         tankRightWheelShape.dispose();
-
-//        PhysicsShapeCache tankShapeCache = new PhysicsShapeCache("tank_hitbox.xml");
-//        tank = tankShapeCache.createBody("TankTexture2", this.world, 0.0006f, 0.0012f);
-//        tank.setTransform(x, y, 0);
 
         Texture tankTexture = new Texture(Gdx.files.internal(SpritePath));
         tankTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
@@ -69,7 +64,7 @@ public class  Tank{
         if(playerSide){
             tankSprite.flip(true, false);
         }
-        tank.setUserData(tankSprite);
+        tank.setUserData(this);
 
     }
 
@@ -83,6 +78,10 @@ public class  Tank{
 
 //    Modify function to accept a projectile object or name
     public void fire(){
+
+    }
+
+    public void takeDamage(Integer damage){
 
     }
 

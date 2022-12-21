@@ -93,8 +93,8 @@ public class GameScreen implements Screen {
 
         Box2D.init();
         world = new World(new Vector2(0, -9.81f), true);
-
         debugRenderer = new Box2DDebugRenderer();
+        world.setContactListener(new detectCollisions());
 
         groundObj = Ground.getGround(world);
 //        groundPos = groundObj.getGroundPos();

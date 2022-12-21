@@ -42,6 +42,7 @@ public class Ground implements Serializable {
 //            }else {
 //                groundHeights.add(0.4f);
 //            }
+
             // Straight ground
 //            groundHeights.add(0.5f);
 
@@ -71,16 +72,14 @@ public class Ground implements Serializable {
             PolygonShape groundColShape = new PolygonShape();
             groundColShape.setAsBox((float)0.005, groundHeights.get(i));
             groundColFixture.shape = groundColShape;
-            groundCol.createFixture(groundColFixture);
+            groundCol.createFixture(groundColFixture).setUserData(this);
 
             Texture groundTexture = new Texture(Gdx.files.internal("ground.png"));
             groundTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
             groundSprite = new Sprite(groundTexture);
             groundSprite.setSize(0.005f, groundHeights.get(i)*2f);
-//                groundSprite.setOrigin(groundSprite.getWidth() / 2, groundSprite.getHeight() / 2);
             groundSprite.setOriginCenter();
             groundCol.setUserData(groundSprite);
-
 
             this.groundCols.add(groundCol);
             groundColShape.dispose();
@@ -97,6 +96,10 @@ public class Ground implements Serializable {
 
     public ArrayList<Body> getGroundCols() {
         return groundCols;
+    }
+
+    public void takeDamage(Integer damage, Fixture groundCol){
+
     }
 
 }

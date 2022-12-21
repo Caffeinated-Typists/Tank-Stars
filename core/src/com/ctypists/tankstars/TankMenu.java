@@ -126,7 +126,7 @@ public class TankMenu implements Screen {
         backButton.setPosition(Gdx.graphics.getWidth() * 0.5f - backButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f - backButton.getHeight() - 150);
 
         //adding listeners to buttons
-        buttongen.setNextScreen(playButton, new GameScreen(game), game);
+        buttongen.setNextScreen(playButton, new GameScreen(game, p1_tank, p2_tank), game);
         buttongen.setNextScreen(backButton, mainScreen, game);
 
         menuStage.addActor(playButton);

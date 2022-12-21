@@ -37,6 +37,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 public class GameScreen implements Screen {
     private static final float STEP_TIME = 1f / 60f;
@@ -77,20 +78,25 @@ public class GameScreen implements Screen {
     private float scaleY = 310.5f;
     private Array<Body> bodies;
 
+    private HashMap<Integer, String> tankMapping;
     private State state = State.RUN;
     private boolean isPaused = false;
     private boolean playerTurn = false; // false = player 1, true = player 2
     // Player 1 is on the left, player 2 is on the right
 
-    public GameScreen(TankStars game) {
+    public GameScreen(TankStars game, int p1_tank, int p2_tank) {
         this.game = game;
 
         batch = new SpriteBatch();
         camera = new OrthographicCamera(Gdx.graphics.getWidth()/672f, Gdx.graphics.getHeight()/310.5f);
         viewport = new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
-//        gameStage = new Stage(viewport, batch);
+        gameStage = new Stage();
         buttongen = new ButtonGenerator();
 
+        tankMapping = new HashMap<Integer, String>();
+        tankMapping.put(0, "Tank1");
+        tankMapping.put(1, "Tank2");
+        tankMapping.put(2, "Tank3");
 
         Box2D.init();
         world = new World(new Vector2(0, -9.81f), true);
@@ -104,8 +110,9 @@ public class GameScreen implements Screen {
 
 //      Pass an argument to define the tank being used
         TankFactory tankFactory = new TankFactory(world);
-        tank1Obj = tankFactory.createTank("Tank3", 0.45f, 0.1f, true);
-        tank2Obj = tankFactory.createTank("Tank2", -0.45f, 0.1f, false);
+
+        tank1Obj = tankFactory.createTank(tankMapping.get(p1_tank), 0.45f, 0.1f, true);
+        tank2Obj = tankFactory.createTank(tankMapping.get(p2_tank), -0.45f, 0.1f, false);
         tank1 = tank1Obj.getTank();
         tank2 = tank2Obj.getTank();
         tank1Sprite = tank1Obj.getSprite();
@@ -113,58 +120,31 @@ public class GameScreen implements Screen {
 
         bodies = new Array<Body>();
 
-//        font = new BitmapFont(Gdx.files.internal("font.fnt"));
-//        font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-//        font.getData().setScale(0.5f);
-
-        // creating pause menu
-//        pauseMenu = new PauseMenu();
-//        pauseMenu.resumeButton.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-//                if (isPaused){
-//                    System.out.println("Resume button clicked");
-//                    gameStage.getActors().removeValue(pauseMenu, true);
-//                    isPaused = false;
-//                }
-//            }
-//        });
-
-//        buttongen.setNextScreen(pauseMenu.saveButton, new MainScreen(game), game);
-//        buttongen.setNextScreen(pauseMenu.exitButton, new MainScreen(game), game);
 
 
 
         // fire button
         fireButton = buttongen.createButton("FIRE", String.valueOf(Gdx.files.internal("fire.png")));
-        fireButton.setBounds(Gdx.graphics.getWidth() * 0.7f - fireButton.getWidth() / 2,
-                Gdx.graphics.getHeight() * 0.3f - fireButton.getHeight() / 2,
-                fireButton.getWidth() / 1.75f,
-                fireButton.getHeight() / 1.75f);
+        fireButton.setBounds(((Gdx.graphics.getWidth() * 0.7f - fireButton.getWidth() / 2) / scaleX) - 1 ,
+                ((Gdx.graphics.getHeight() * 0.3f - fireButton.getHeight() / 2) / scaleY) - 1,
+                (fireButton.getWidth() / scaleX) / 1.75f,
+                (fireButton.getHeight() / scaleY)/1.75f);
 //        fireButton.getData().setScale(0.5f);
-        buttongen.setScalableButton(fireButton, 1.15f);
+        buttongen.setScalableButton(fireButton, 0.03f);
 
         // adding pause menu icon
         Texture pauseIconTexture = new Texture(Gdx.files.internal("menuIcon.png"));
         pauseIconTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         pauseIcon = new ImageButton(new TextureRegionDrawable(new TextureRegion(pauseIconTexture)));
-        pauseIcon.setBounds(10, Gdx.graphics.getHeight() - pauseIcon.getHeight()/2 - 10, pauseIcon.getWidth() / 2, pauseIcon.getHeight() / 2);
-//        pauseIcon.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-//                System.out.println("pause");
-//                if (!isPaused) {
-//                    gameStage.addActor(pauseMenu);
-//                    isPaused = true;
-//                }
-//            }
-//        });
+        pauseIcon.setBounds((10) / scaleX - 1f, (Gdx.graphics.getHeight() - pauseIcon.getHeight()/2 - 10) / scaleY - 1 , pauseIcon.getWidth() / 2, pauseIcon.getHeight() / 2);
+        pauseIcon.setTransform(true);
+        pauseIcon.setScale(scalingX, scalingY);
+
         buttongen.setNextScreen(pauseIcon, new PauseMenuAlt(game, this), game);
 
         // joystick
-        joystickgen = new Joystick();
-        Touchpad touchpad = joystickgen.getTouchpad();
-        touchpad.setBounds(Gdx.graphics.getWidth() - touchpad.getWidth() - 20, 20, touchpad.getWidth(), touchpad.getHeight());
+        Touchpad touchpad = Joystick.getTouchpad();
+        touchpad.setBounds((Gdx.graphics.getWidth() - touchpad.getWidth() - 20) / scaleX - 1, 20 / scaleY - 1, touchpad.getWidth() * scaleX, touchpad.getHeight() * scaleY);
         touchpad.setResetOnTouchUp(true);
 
         // health bar experiment
@@ -173,8 +153,9 @@ public class GameScreen implements Screen {
         healthBarR.HealthBarR();
 
         healthBarR.setBounds(TankStars.WIDTH/2f + 50, TankStars.HEIGHT - 10 - healthBarL.getHeight(), healthBarR.getWidth(), healthBarR.getHeight());
-        healthBarL.setBounds(TankStars.WIDTH/2f - healthBarL.getWidth() - 50, TankStars.HEIGHT - 10 - healthBarL.getHeight(), healthBarL.getWidth(), healthBarL.getHeight());
-
+        healthBarL.setBounds((TankStars.WIDTH/2f - healthBarL.getWidth() - 50) * scalingX - 1, (TankStars.HEIGHT - 10 - healthBarL.getHeight()) * scalingY - 1, healthBarL.getWidth() /scaleX, healthBarL.getHeight() / scaleY);
+//        healthBarL.set
+//        healthBarL.setScale(scalingX * scalingX, scalingY * scalingY);
         healthBarL.setHealth(0.5f);
         healthBarR.setHealth(0.2f);
 
@@ -261,6 +242,7 @@ public class GameScreen implements Screen {
 //        System.out.println(camera.position);
 
         batch.setProjectionMatrix(camera.combined);
+        gameStage.setViewport(viewport);
         batch.begin();
 
         // background
@@ -294,11 +276,11 @@ public class GameScreen implements Screen {
 //        batch.draw(fuelTexture, 0, 0);
         batch.end();
 
-//        gameStage.draw();
-//        gameStage.act();
+        gameStage.draw();
+        gameStage.act();
 //        Comment or uncomment this line to see the polygons
         debugRenderer.render(world, camera.combined);
-        save_game();
+//        save_game();
     }
 
     private void stepWorld(){

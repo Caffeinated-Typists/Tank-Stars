@@ -66,4 +66,8 @@ public class HealthBar extends Actor {
             loadingBarBackground.draw(batch, getX() + 20, getY(), health* getWidth() * getScaleX() * 0.9322033898f, getHeight() * getScaleY());
         loadingBar.draw(batch, getX(), getY(),  getWidth() * getScaleX(), getHeight() * getScaleY());
     }
+
+    public boolean invalidHealth(){
+        return health < 0 || health > 1;
+    }
 }

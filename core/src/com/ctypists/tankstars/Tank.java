@@ -71,7 +71,6 @@ public class  Tank{
             tankSprite.flip(true, false);
         }
         tank.setUserData(this);
-
     }
 
     public Body getTank(){
@@ -97,6 +96,13 @@ public class  Tank{
 
     public Integer getHealth(){
         return this.health;
+    }
+
+    public boolean isOutOfBounds(){
+        if (tank.getPosition().x < -1 || tank.getPosition().x > 1 || tank.getPosition().y < -1 || tank.getPosition().y > 1){
+            return true;
+        }
+        return false;
     }
 
 }

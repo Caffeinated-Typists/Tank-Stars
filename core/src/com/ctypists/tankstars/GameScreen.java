@@ -46,7 +46,7 @@ public class GameScreen implements Screen {
 
     private TankStars game;
     private SpriteBatch batch;
-    private Texture gamebackground, ground, joystick, fuel;
+    private Texture gamebackground, ground, joystick, fuel, healthbarl, healthbarr;
     private TextureRegion fuelTexture;
     private OrthographicCamera camera;
     private ExtendViewport viewport;
@@ -77,6 +77,7 @@ public class GameScreen implements Screen {
     private float scaleX = 672;
     private float scaleY = 310.5f;
     private Array<Body> bodies;
+    private int p1_tank, p2_tank;
 
     private HashMap<Integer, String> tankMapping;
     private State state = State.RUN;
@@ -86,6 +87,8 @@ public class GameScreen implements Screen {
 
     public GameScreen(TankStars game, int p1_tank, int p2_tank) {
         this.game = game;
+        this.p1_tank = p1_tank;
+        this.p2_tank = p2_tank;
 
         batch = new SpriteBatch();
         camera = new OrthographicCamera(Gdx.graphics.getWidth()/672f, Gdx.graphics.getHeight()/310.5f);
@@ -110,7 +113,8 @@ public class GameScreen implements Screen {
 
 //      Pass an argument to define the tank being used
         TankFactory tankFactory = new TankFactory(world);
-
+        System.out.println("Player 1 tank: " + p1_tank);
+        System.out.println("Player 2 tank: " + p2_tank);
         tank1Obj = tankFactory.createTank(tankMapping.get(p1_tank), 0.45f, 0.1f, true);
         tank2Obj = tankFactory.createTank(tankMapping.get(p2_tank), -0.45f, 0.1f, false);
         tank1 = tank1Obj.getTank();
@@ -175,8 +179,12 @@ public class GameScreen implements Screen {
         joystick = new Texture(Gdx.files.internal("aim.png"));
         gamebackground = new Texture(Gdx.files.internal("gameBackground.png"));
         ground = new Texture(Gdx.files.internal("ground.png"));
+        healthbarl = new Texture(Gdx.files.internal("HealthBarL.png"));
+        healthbarr = new Texture(Gdx.files.internal("HealthBarR.png"));
         gamebackground.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         ground.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+
+
         Gdx.input.setInputProcessor(gameStage);
 //        pauseIcon.addListener(new ClickListener() {
 //            @Override
@@ -219,6 +227,7 @@ public class GameScreen implements Screen {
         }else if(Gdx.input.isKeyPressed(Input.Keys.O)){
             camera.zoom += 0.02;
         }
+
 //
 ////        if(Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)){
 ////            tank1.applyForceToCenter(0, 1, true);
@@ -226,6 +235,13 @@ public class GameScreen implements Screen {
 ////            tank1.applyForceToCenter(0, -1, true);
 ////        }
 //
+        if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+            save_game();
+            game.setScreen(new PauseMenuAlt(game, this));
+        }
+
+
+
         if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
             if(this.playerTurn){
                 tank2Obj.fire(50, 60);
@@ -248,6 +264,8 @@ public class GameScreen implements Screen {
         // background
         batch.draw(gamebackground, -1, -1, Gdx.graphics.getWidth()*scalingX, Gdx.graphics.getHeight()*scalingY);
 
+        batch.draw(healthbarl, -0.6f, 0.7f, healthbarl.getWidth() * scalingX, healthbarl.getHeight() * scalingY);
+        batch.draw(healthbarr, 0.2f, 0.7f, healthbarr.getWidth() * scalingX, healthbarr.getHeight() * scalingY);
         world.getBodies(bodies);
         for (Body body : bodies) {
             if (body.getUserData() != null) {
@@ -280,7 +298,7 @@ public class GameScreen implements Screen {
         gameStage.act();
 //        Comment or uncomment this line to see the polygons
 //        debugRenderer.render(world, camera.combined);
-        save_game();
+//        save_game();
     }
 
     private void stepWorld(){
@@ -295,8 +313,8 @@ public class GameScreen implements Screen {
 
     public void save_game(){
         // serializes the game state
-        if (!game.save_state)
-            return;
+//        if (!game.save_state)
+//            return;
 
         try {
 
@@ -308,11 +326,9 @@ public class GameScreen implements Screen {
             System.out.println("Saving game state...");
             FileOutputStream fileOut = new FileOutputStream( datetime + ".txt");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(tank1Obj);
-            out.writeObject(tank2Obj);
-            out.writeObject(tank1);
-            out.writeObject(tank2);
-            out.writeObject(groundObj);
+            SaveGameObj saveGameObj = new SaveGameObj(tankMapping.get(p1_tank), tankMapping.get(p2_tank), tank1Obj.getHealth(), tank2Obj.getHealth());
+
+            out.writeObject(saveGameObj);
             out.close();
             fileOut.close();
             System.out.printf("Serialized data is saved in game_state.ser");
@@ -320,7 +336,7 @@ public class GameScreen implements Screen {
             i.printStackTrace();
         }
 
-        game.save_state = false;
+//        game.save_state = false;
     }
 
     @Override

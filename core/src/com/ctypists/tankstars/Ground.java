@@ -109,6 +109,15 @@ public class Ground implements Serializable {
         }
     }
 
+    public boolean equals(Object obj) {
+        if (obj instanceof Ground) {
+            Ground ground = (Ground) obj;
+            return ground.getGroundHeights().equals(this.groundHeights);
+        }
+        return false;
+
+    }
+
 }
 
 class GroundCol{
@@ -157,16 +166,6 @@ class GroundCol{
     public void takeDamage(Integer damage){
 
     }
-
-
-//    public boolean equals(Object obj) {
-//        if (obj instanceof Ground) {
-//            Ground ground = (Ground) obj;
-//            return ground.getGroundHeights().equals(this.groundHeights);
-//        }
-//        return false;
-//
-//    }
 
 
 }

@@ -26,14 +26,21 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class GameScreen implements Screen {
     private static final float STEP_TIME = 1f / 60f;
     private static final int VELOCITY_ITERATIONS = 6;
     private static final int POSITION_ITERATIONS = 2;
 
-    private Game game;
+    private TankStars game;
     private SpriteBatch batch;
     private Texture gamebackground, ground, joystick, fuel;
     private TextureRegion fuelTexture;
@@ -67,7 +74,7 @@ public class GameScreen implements Screen {
     private boolean playerTurn = false; // false = player 1, true = player 2
     // Player 1 is on the left, player 2 is on the right
 
-    public GameScreen(Game game) {
+    public GameScreen(TankStars game) {
         this.game = game;
 
         batch = new SpriteBatch();
@@ -262,7 +269,7 @@ public class GameScreen implements Screen {
         gameStage.act();
 //        Comment or uncomment this line to see the polygons
         debugRenderer.render(world, camera.combined);
-
+        save_game();
     }
 
     private void renderGround(){
@@ -284,6 +291,36 @@ public class GameScreen implements Screen {
             accumulator -= STEP_TIME;
             world.step(STEP_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
         }
+    }
+
+    public void save_game(){
+        // serializes the game state
+        if (!game.save_state)
+            return;
+
+        try {
+
+            // getting current datetime
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
+            Date date = new Date();
+            String datetime = dateFormat.format(date);
+
+            System.out.println("Saving game state...");
+            FileOutputStream fileOut = new FileOutputStream( datetime + ".txt");
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(tank1Obj);
+            out.writeObject(tank2Obj);
+            out.writeObject(tank1);
+            out.writeObject(tank2);
+            out.writeObject(groundObj);
+            out.close();
+            fileOut.close();
+            System.out.printf("Serialized data is saved in game_state.ser");
+        } catch (IOException i) {
+            i.printStackTrace();
+        }
+
+        game.save_state = false;
     }
 
     @Override

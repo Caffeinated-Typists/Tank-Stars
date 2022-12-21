@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -16,7 +17,8 @@ import jdk.tools.jmod.Main;
 import javax.swing.text.View;
 
 public class PauseMenuAlt implements Screen {
-    private Game game;
+    private TankStars game;
+    private TankStars tankStars;
     private GameScreen screen;
     private Camera camera;
     private Viewport viewport;
@@ -28,7 +30,7 @@ public class PauseMenuAlt implements Screen {
     private ImageTextButton resumeButton, saveButton, exitButton;
     private ButtonGenerator buttonGenerator;
 
-    public PauseMenuAlt(Game game, GameScreen screen) {
+    public PauseMenuAlt(final TankStars game, final GameScreen screen) {
         this.game = game;
         this.screen = screen;
 
@@ -52,9 +54,26 @@ public class PauseMenuAlt implements Screen {
         saveButton.setPosition(TankStars.WIDTH / 2f - saveButton.getWidth() / 2, TankStars.HEIGHT / 2f - saveButton.getHeight() / 2);
         exitButton.setPosition(TankStars.WIDTH / 2f - exitButton.getWidth() / 2, TankStars.HEIGHT / 2f - exitButton.getHeight() * 3 / 2 - 30);
 
+        exitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+                game.setScreen(new MainScreen(game));
+            }
+        });
+
+        saveButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+                System.out.println("Save");
+                game.save_state = true;
+                game.setScreen(screen);
+            }
+        });
         stage.addActor(resumeButton);
         stage.addActor(saveButton);
         stage.addActor(exitButton);
+
+
 
     }
 

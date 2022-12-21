@@ -9,6 +9,7 @@ public class TankStars extends Game {
 	 */
 	public static final int WIDTH = 1344;
 	public static final int HEIGHT = 621;
+	public boolean save_state = false;
 
 
 	@Override

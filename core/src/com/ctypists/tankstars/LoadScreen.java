@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class LoadScreen implements Screen {
-    private Game game;
+    private TankStars game;
     private MainScreen mainScreen;
     private ButtonGenerator buttongen;
     private Stage loadStage;
@@ -23,7 +23,7 @@ public class LoadScreen implements Screen {
     private Viewport viewport;
     private Texture gamebackground;
 
-    public LoadScreen(Game game, MainScreen mainScreen) {
+    public LoadScreen(TankStars game, MainScreen mainScreen) {
         this.game = game;
         this.mainScreen = mainScreen;
         buttongen = new ButtonGenerator();

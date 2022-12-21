@@ -29,29 +29,29 @@ public class  Tank{
         FixtureDef tankBoxFixture = new FixtureDef();
         tankBoxFixture.shape = tankBoxShape;
         tankBoxFixture.density = 10;
-        tankBoxFixture.friction = 1f;
+        tankBoxFixture.friction = 0.1f;
         tankBoxFixture.restitution = 0f;
         tank.createFixture(tankBoxFixture);
         tankBoxShape.dispose();
 
         CircleShape tankLeftWheelShape = new CircleShape();
-        tankLeftWheelShape.setRadius((float)0.02);
-        tankLeftWheelShape.setPosition(new Vector2((float)0.04, (float)-0.04));
+        tankLeftWheelShape.setRadius((float)0.03);
+        tankLeftWheelShape.setPosition(new Vector2((float)0.05, (float)-0.03));
         FixtureDef tankLeftWheelFixture = new FixtureDef();
         tankLeftWheelFixture.shape = tankLeftWheelShape;
         tankLeftWheelFixture.density = 10;
-        tankLeftWheelFixture.friction = 1f;
+        tankLeftWheelFixture.friction = 0.1f;
         tankLeftWheelFixture.restitution = 0f;
         tank.createFixture(tankLeftWheelFixture);
         tankLeftWheelShape.dispose();
 
         CircleShape tankRightWheelShape = new CircleShape();
-        tankRightWheelShape.setRadius((float)0.02);
-        tankRightWheelShape.setPosition(new Vector2((float)-0.04, (float)-0.04));
+        tankRightWheelShape.setRadius((float)0.03);
+        tankRightWheelShape.setPosition(new Vector2((float)-0.05, (float)-0.03));
         FixtureDef tankRightWheelFixture = new FixtureDef();
         tankRightWheelFixture.shape = tankRightWheelShape;
         tankRightWheelFixture.density = 10;
-        tankRightWheelFixture.friction = 1f;
+        tankRightWheelFixture.friction = 0.1f;
         tankRightWheelFixture.restitution = 0f;
         tank.createFixture(tankRightWheelFixture);
         tankRightWheelShape.dispose();

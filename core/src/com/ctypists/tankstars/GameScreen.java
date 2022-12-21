@@ -103,7 +103,7 @@ public class GameScreen implements Screen {
 
 //      Pass an argument to define the tank being used
         TankFactory tankFactory = new TankFactory(world);
-        tank1Obj = tankFactory.createTank("Tank1", 0.45f, 0.1f, true);
+        tank1Obj = tankFactory.createTank("Tank3", 0.45f, 0.1f, true);
         tank2Obj = tankFactory.createTank("Tank2", -0.45f, 0.1f, false);
         tank1 = tank1Obj.getTank();
         tank2 = tank2Obj.getTank();

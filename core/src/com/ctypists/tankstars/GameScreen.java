@@ -93,20 +93,18 @@ public class GameScreen implements Screen {
 
         Box2D.init();
         world = new World(new Vector2(0, -9.81f), true);
-
         debugRenderer = new Box2DDebugRenderer();
+        world.setContactListener(new detectCollisions());
 
-        groundObj = new Ground(world);
+        groundObj = Ground.getGround(world);
 //        groundPos = groundObj.getGroundPos();
 //        groundHeights = groundObj.getGroundHeights();
 //        groundCols = groundObj.getGroundCols();
 
 //      Pass an argument to define the tank being used
         TankFactory tankFactory = new TankFactory(world);
-        tank1Obj = tankFactory.createTank("Tank1", 0.45f, 0.1f);
-//        tank1Obj = new Tank(world, 0.45f, 0.1f, "TankTexture2.png");
-        tank2Obj = tankFactory.createTank("Tank2", -0.45f, 0.1f);
-//        tank2Obj = new Tank(world, -0.45f, 0.1f, "TankTexture2.png");
+        tank1Obj = tankFactory.createTank("Tank3", 0.45f, 0.1f, true);
+        tank2Obj = tankFactory.createTank("Tank2", -0.45f, 0.1f, false);
         tank1 = tank1Obj.getTank();
         tank2 = tank2Obj.getTank();
         tank1Sprite = tank1Obj.getSprite();
@@ -139,8 +137,6 @@ public class GameScreen implements Screen {
         Touchpad touchpad = joystickgen.getTouchpad();
         touchpad.setBounds(Gdx.graphics.getWidth() - touchpad.getWidth() - 20, 20, touchpad.getWidth(), touchpad.getHeight());
         touchpad.setResetOnTouchUp(true);
-
-
 
         // health bar experiment
         HealthBar healthBarL = new HealthBar(), healthBarR = new HealthBar();
@@ -196,23 +192,21 @@ public class GameScreen implements Screen {
 //        }
 
 //        // tank movements and controls
-//        if(Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-////            if(this.playerTurn) tank1.applyForceToCenter(-1f, 0, true);
-////            else tank2.applyForceToCenter(-1f, 0, true);
-//            if(this.playerTurn) tank1.setLinearVelocity(-0.5f, 0);
-//            else tank2.setLinearVelocity(-0.5f, 0);
-//        }else if(Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-////            if(this.playerTurn) tank1.applyForceToCenter(1f, 0, true);
-////            else tank2.applyForceToCenter(1f, 0, true);
-//            if(this.playerTurn) tank1.setLinearVelocity(0.5f, 0);
-//            else tank2.setLinearVelocity(0.5f, 0);
-//        }
+        if(Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)){
+//            if(this.playerTurn) tank1.applyForceToCenter(-1f, 0, true);
+//            else tank2.applyForceToCenter(-1f, 0, true);
+            if(this.playerTurn) tank1.setLinearVelocity(-0.35f, 0);
+            else tank2.setLinearVelocity(-0.5f, 0);
+        }else if(Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
+//            if(this.playerTurn) tank1.applyForceToCenter(1f, 0, true);
+//            else tank2.applyForceToCenter(1f, 0, true);
+            if(this.playerTurn) tank1.setLinearVelocity(0.5f, 0);
+            else tank2.setLinearVelocity(0.5f, 0);
+        }
 //
         if(Gdx.input.isKeyPressed(Input.Keys.I)){
-//            System.out.println("Zoom kar");
             camera.zoom -= 0.02;
         }else if(Gdx.input.isKeyPressed(Input.Keys.O)){
-//            System.out.println("Zoom kar");
             camera.zoom += 0.02;
         }
 //
@@ -222,14 +216,14 @@ public class GameScreen implements Screen {
 ////            tank1.applyForceToCenter(0, -1, true);
 ////        }
 //
-//        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
-//            if(this.playerTurn){
-//                tank2Obj.fire();
-//            }else{
-//                tank1Obj.fire();
-//            }
-//            this.playerTurn = !this.playerTurn;
-//        }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
+            if(this.playerTurn){
+                tank2Obj.fire();
+            }else{
+                tank1Obj.fire();
+            }
+            this.playerTurn = !this.playerTurn;
+        }
 
         stepWorld();
 

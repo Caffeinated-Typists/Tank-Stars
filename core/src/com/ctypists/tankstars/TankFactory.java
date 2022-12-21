@@ -18,8 +18,8 @@ public class TankFactory {
         this.tankTexturesPath.put("Tank3", "TankTexture3.png");
     }
 
-    public Tank createTank(String tankName, float x, float y) {
-        return new Tank(world, x, y, tankTexturesPath.get(tankName));
+    public Tank createTank(String tankName, float x, float y, boolean playerSide) {
+        return new Tank(world, x, y, tankTexturesPath.get(tankName), playerSide);
     }
 
 }

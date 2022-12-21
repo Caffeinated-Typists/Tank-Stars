@@ -37,6 +37,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 public class GameScreen implements Screen {
     private static final float STEP_TIME = 1f / 60f;
@@ -77,12 +78,13 @@ public class GameScreen implements Screen {
     private float scaleY = 310.5f;
     private Array<Body> bodies;
 
+    private HashMap<Integer, String> tankMapping;
     private State state = State.RUN;
     private boolean isPaused = false;
     private boolean playerTurn = false; // false = player 1, true = player 2
     // Player 1 is on the left, player 2 is on the right
 
-    public GameScreen(TankStars game) {
+    public GameScreen(TankStars game, int p1_tank, int p2_tank) {
         this.game = game;
 
         batch = new SpriteBatch();
@@ -91,6 +93,10 @@ public class GameScreen implements Screen {
         gameStage = new Stage();
         buttongen = new ButtonGenerator();
 
+        tankMapping = new HashMap<Integer, String>();
+        tankMapping.put(0, "Tank1");
+        tankMapping.put(1, "Tank2");
+        tankMapping.put(2, "Tank3");
 
         Box2D.init();
         world = new World(new Vector2(0, -9.81f), true);
@@ -104,8 +110,9 @@ public class GameScreen implements Screen {
 
 //      Pass an argument to define the tank being used
         TankFactory tankFactory = new TankFactory(world);
-        tank1Obj = tankFactory.createTank("Tank3", 0.45f, 0.1f, true);
-        tank2Obj = tankFactory.createTank("Tank2", -0.45f, 0.1f, false);
+
+        tank1Obj = tankFactory.createTank(tankMapping.get(p1_tank), 0.45f, 0.1f, true);
+        tank2Obj = tankFactory.createTank(tankMapping.get(p2_tank), -0.45f, 0.1f, false);
         tank1 = tank1Obj.getTank();
         tank2 = tank2Obj.getTank();
         tank1Sprite = tank1Obj.getSprite();

@@ -10,13 +10,15 @@ import java.util.ArrayList;
 
 public class Ground implements Serializable {
 
+    private static Ground ground = null;
+
     private final World world;
     private final ArrayList<Float> groundPos;
     private ArrayList<Float> groundHeights;
     private ArrayList<Body> groundCols;
     private Sprite groundSprite;
 
-    public Ground(World world) {
+    private Ground(World world) {
         this.world = world;
 
         this.groundCols = new ArrayList<Body>();
@@ -48,6 +50,13 @@ public class Ground implements Serializable {
         }
 
         this.createGround();
+    }
+
+    public static Ground getGround(World world){
+        if(ground == null){
+            ground = new Ground(world);
+        }
+        return ground;
     }
 
     private void createGround() {

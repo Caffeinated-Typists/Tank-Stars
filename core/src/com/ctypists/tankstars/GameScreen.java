@@ -96,7 +96,7 @@ public class GameScreen implements Screen {
 
         debugRenderer = new Box2DDebugRenderer();
 
-        groundObj = new Ground(world);
+        groundObj = Ground.getGround(world);
 //        groundPos = groundObj.getGroundPos();
 //        groundHeights = groundObj.getGroundHeights();
 //        groundCols = groundObj.getGroundCols();

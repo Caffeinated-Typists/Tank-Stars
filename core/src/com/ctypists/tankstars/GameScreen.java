@@ -135,8 +135,7 @@ public class GameScreen implements Screen {
         buttongen.setNextScreen(pauseIcon, new PauseMenuAlt(game, this), game);
 
         // joystick
-        joystickgen = new Joystick();
-        Touchpad touchpad = joystickgen.getTouchpad();
+        Touchpad touchpad = Joystick.getTouchpad();
         touchpad.setBounds((Gdx.graphics.getWidth() - touchpad.getWidth() - 20) / scaleX - 1, 20 / scaleY - 1, touchpad.getWidth() * scaleX, touchpad.getHeight() * scaleY);
         touchpad.setResetOnTouchUp(true);
 
@@ -152,11 +151,11 @@ public class GameScreen implements Screen {
         healthBarL.setHealth(0.5f);
         healthBarR.setHealth(0.2f);
 
-        gameStage.addActor(fireButton);
-        gameStage.addActor(pauseIcon);
+//        gameStage.addActor(fireButton);
+//        gameStage.addActor(pauseIcon);
 //        gameStage.addActor(touchpad);
-        gameStage.addActor(healthBarR);
-        gameStage.addActor(healthBarL);
+//        gameStage.addActor(healthBarR);
+//        gameStage.addActor(healthBarL);
 
     }
 

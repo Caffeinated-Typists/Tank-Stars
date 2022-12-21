@@ -1,20 +1,21 @@
 package com.ctypists.tankstars;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 public class Joystick {
-    Touchpad.TouchpadStyle touchpadStyle;
-    Touchpad.TouchpadStyle fuelTouchpadStyle;
-    Touchpad touchpad;
-    Touchpad fuel_touchpad;
+    private static Touchpad.TouchpadStyle touchpadStyle;
+    private Touchpad.TouchpadStyle fuelTouchpadStyle;
+    private static Touchpad touchpad;
+    private Touchpad fuel_touchpad;
 
-    public Joystick() {
+    private Joystick() {
         touchpadStyle = new Touchpad.TouchpadStyle();
-        Texture touchpadBackground = new Texture("joystick_bg.png");
-        Texture touchpadKnob = new Texture("joystick_knob.png");
+        Texture touchpadBackground = new Texture(Gdx.files.internal("joystick_bg.png"));
+        Texture touchpadKnob = new Texture(Gdx.files.internal("joystick_knob.png"));
         touchpadBackground.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         touchpadKnob.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
@@ -40,7 +41,12 @@ public class Joystick {
         fuel_touchpad = new Touchpad(15, fuelTouchpadStyle);
     }
 
-    public Touchpad getTouchpad() {
+    public static Touchpad getTouchpad() {
+        if (touchpad == null) {
+            Joystick joystick = new Joystick();
+            touchpad = joystick.touchpad;
+        }
+
         return touchpad;
     }
 

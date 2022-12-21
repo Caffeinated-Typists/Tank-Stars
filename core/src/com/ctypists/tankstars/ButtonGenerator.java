@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton.ImageTextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -27,6 +28,7 @@ public class ButtonGenerator {
         imageDrawable = new TextureRegionDrawable(new TextureRegion(image));
         font = new BitmapFont(Gdx.files.internal("font.fnt"));
         font.setColor(1, 1, 1, 1);
+        font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         mystyle = new ImageTextButtonStyle();
         mystyle.font = font;
         mystyle.up = imageDrawable;
@@ -38,12 +40,24 @@ public class ButtonGenerator {
 
     }
 
+    public void setScalableButton(ImageTextButton button, float scale) {
+        button.getLabel().setFontScale(scale);
+    }
 
     public void setNextScreen(ImageTextButton button, final Screen screen, final Game game){
         button.addListener(new ClickListener(){
         @Override
         public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
             game.setScreen(screen);
+            }
+        });
+    }
+
+    public void setNextScreen(ImageButton button, final Screen screen, final Game game){
+        button.addListener(new ClickListener(){
+            @Override
+            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+                game.setScreen(screen);
             }
         });
     }

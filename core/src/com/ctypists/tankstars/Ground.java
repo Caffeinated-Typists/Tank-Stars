@@ -15,13 +15,13 @@ public class Ground implements Serializable {
     private final World world;
     private final ArrayList<Float> groundPos;
     private ArrayList<Float> groundHeights;
-    private ArrayList<Body> groundCols;
+    private ArrayList<GroundCol> groundCols;
     private Sprite groundSprite;
 
     private Ground(World world) {
         this.world = world;
 
-        this.groundCols = new ArrayList<Body>();
+        this.groundCols = new ArrayList<GroundCol>();
         this.groundPos = new ArrayList<Float>();
         this.groundHeights = new ArrayList<Float>();
 
@@ -61,7 +61,7 @@ public class Ground implements Serializable {
     }
 
     private void createGround() {
-        this.groundCols = new ArrayList<Body>();
+        this.groundCols = new ArrayList<GroundCol>();
         for(int i = 0; i < groundHeights.size(); i++){
             BodyDef groundColDef = new BodyDef();
             groundColDef.type = BodyDef.BodyType.StaticBody;
@@ -77,9 +77,9 @@ public class Ground implements Serializable {
             Texture groundTexture = new Texture(Gdx.files.internal("ground.png"));
             groundTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
             groundSprite = new Sprite(groundTexture);
-            groundSprite.setSize(0.005f, groundHeights.get(i)*2f);
+            groundSprite.setSize(0.005f, groundHeights.get(i)*2.4f);
             groundSprite.setOriginCenter();
-            groundCol.setUserData(groundSprite);
+            groundCol.setUserData(this);
 
             this.groundCols.add(groundCol);
             groundColShape.dispose();
@@ -94,12 +94,39 @@ public class Ground implements Serializable {
         return this.groundHeights;
     }
 
-    public ArrayList<Body> getGroundCols() {
+    public ArrayList<GroundCol> getGroundCols() {
         return groundCols;
     }
 
-    public void takeDamage(Integer damage, Fixture groundCol){
+    public Sprite getSprite(){
+        return this.groundSprite;
+    }
 
+    public void takeDamage(Integer damage, Fixture groundCol){
+//        int index = groundCols.indexOf(groundCol.getBody());
+//        for(int i = Math.max(index - damage/5, 0); i < Math.min(index + damage/5, groundHeights.size()); i++){
+//            groundHeights.set(i, groundHeights.get(i) - damage/100f);
+//            groundCols.get(i).getUserData().getSprite().setSize(0.005f, groundHeights.get(i)*2.4f);
+//        }
+    }
+
+}
+
+class GroundCol{
+
+    private final Body groundCol;
+    private final Sprite groundSprite;
+
+    public GroundCol(){
+
+    }
+
+    public Body getGroundCol(){
+        return this.groundCol;
+    }
+
+    public Sprite getSprite(){
+        return this.groundSprite;
     }
 
 

@@ -33,6 +33,7 @@ public class TankMenu implements Screen {
     private ArrayList<Texture> tanks;
     private int p1_tank, p2_tank;
     private BitmapFont text;
+    private boolean gameStarted = false;
     public TankMenu(TankStars game, MainScreen mainScreen) {
         this.game = game;
         this.mainScreen = mainScreen;
@@ -126,9 +127,13 @@ public class TankMenu implements Screen {
         backButton.setPosition(Gdx.graphics.getWidth() * 0.5f - backButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f - backButton.getHeight() - 150);
 
         //adding listeners to buttons
-        buttongen.setNextScreen(playButton, new GameScreen(game, p1_tank, p2_tank), game);
         buttongen.setNextScreen(backButton, mainScreen, game);
-
+        playButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+                gameStarted = true;
+            }
+        });
         menuStage.addActor(playButton);
         menuStage.addActor(backButton);
 //        menuStage.addActor(pauseMenu);
@@ -153,6 +158,9 @@ public class TankMenu implements Screen {
         menuBatch.draw((tanks.get(p2_tank)),  Gdx.graphics.getWidth() - tanks.get(p2_tank).getWidth() - 100, Gdx.graphics.getHeight()/2f - tanks.get(p2_tank).getHeight()/2f, tanks.get(p2_tank).getWidth(), tanks.get(p2_tank).getHeight());
         menuBatch.end();
         menuStage.draw();
+        if (gameStarted) {
+            game.setScreen(new GameScreen(game, p2_tank, p1_tank));
+        }
     }
 
     @Override

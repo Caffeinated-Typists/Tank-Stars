@@ -87,8 +87,11 @@ public class GameScreen implements Screen {
 //        groundCols = groundObj.getGroundCols();
 
 //      Pass an argument to define the tank being used
-        tank1Obj = new Tank(world, 0.45f, 0.1f, "TankTexture2.png");
-        tank2Obj = new Tank(world, -0.45f, 0.1f, "TankTexture2.png");
+        TankFactory tankFactory = new TankFactory(world);
+        tank1Obj = tankFactory.createTank("Tank1", 0.45f, 0.1f);
+//        tank1Obj = new Tank(world, 0.45f, 0.1f, "TankTexture2.png");
+        tank2Obj = tankFactory.createTank("Tank2", -0.45f, 0.1f);
+//        tank2Obj = new Tank(world, -0.45f, 0.1f, "TankTexture2.png");
         tank1 = tank1Obj.getTank();
         tank2 = tank2Obj.getTank();
         tank1Sprite = tank1Obj.getSprite();
@@ -271,7 +274,7 @@ public class GameScreen implements Screen {
 //        gameStage.draw();
 //        gameStage.act();
 //        Comment or uncomment this line to see the polygons
-//        debugRenderer.render(world, camera.combined);
+        debugRenderer.render(world, camera.combined);
 
     }
 

@@ -31,6 +31,10 @@ public class Projectile{
         return this.damage;
     }
 
+    public Sprite getSprite(){
+        return this.projectileSprite;
+    }
+
     public void destroyProjectile(){
 //        this.projectile.setActive(false);
     }

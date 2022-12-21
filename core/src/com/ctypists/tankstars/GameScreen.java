@@ -27,6 +27,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import sun.tools.jconsole.inspector.XObject;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -266,16 +267,19 @@ public class GameScreen implements Screen {
         batch.draw(gamebackground, -1, -1, Gdx.graphics.getWidth()*scalingX, Gdx.graphics.getHeight()*scalingY);
 
         world.getBodies(bodies);
-//        boolean print = true;
         for (Body body : bodies) {
-//            if(print) {
-//                System.out.println(body.getPosition());
-//                print = false;
-//            }
-            if ((body.getUserData() != null) && (body.getUserData() instanceof Sprite)) {
-//                System.out.println(body.getPosition());
-                Sprite sprite = (Sprite) body.getUserData();
-                sprite.setBounds(body.getPosition().x - sprite.getWidth() / 2, body.getPosition().y - sprite.getHeight() / 2, sprite.getWidth(), sprite.getHeight());
+            if (body.getUserData() != null) {
+                Sprite sprite = null;
+                if(body.getUserData() instanceof Tank){
+                    Tank tank = (Tank) body.getUserData();
+                    sprite = tank.getSprite();
+                }else if(body.getUserData() instanceof Projectile){
+                    Projectile projectile = (Projectile) body.getUserData();
+                    sprite = projectile.getSprite();
+                }else if(body.getUserData() instanceof Ground){
+                    Ground ground = (Ground) body.getUserData();
+                    sprite = ground.getSprite();
+                }
                 sprite.setPosition(body.getPosition().x - sprite.getWidth()/2, body.getPosition().y - sprite.getHeight()/2);
                 sprite.setRotation((float) Math.toDegrees(body.getAngle()));
                 sprite.draw(batch);

@@ -14,6 +14,7 @@ public class  Tank{
     private final World world;
     private final Sprite tankSprite;
     private ArrayList<Projectile> projectiles;
+    private Integer health;
 
     public Tank(World world, float x, float y, String SpritePath, boolean playerSide){
         this.world = world;
@@ -59,7 +60,6 @@ public class  Tank{
         tankTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         tankSprite = new Sprite(tankTexture);
         tankSprite.setSize(0.11f, 0.14f);
-//        tankSprite.setOrigin(tankSprite.getWidth()/2, tankSprite.getHeight()/2);
         tankSprite.setOriginCenter();
         if(playerSide){
             tankSprite.flip(true, false);
@@ -82,7 +82,7 @@ public class  Tank{
     }
 
     public void takeDamage(Integer damage){
-
+        this.health -= damage;
     }
 
 }

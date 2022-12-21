@@ -77,9 +77,9 @@ public class Ground implements Serializable {
             Texture groundTexture = new Texture(Gdx.files.internal("ground.png"));
             groundTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
             groundSprite = new Sprite(groundTexture);
-            groundSprite.setSize(0.005f, groundHeights.get(i)*2f);
+            groundSprite.setSize(0.005f, groundHeights.get(i)*2.4f);
             groundSprite.setOriginCenter();
-            groundCol.setUserData(groundSprite);
+            groundCol.setUserData(this);
 
             this.groundCols.add(groundCol);
             groundColShape.dispose();
@@ -96,6 +96,10 @@ public class Ground implements Serializable {
 
     public ArrayList<Body> getGroundCols() {
         return groundCols;
+    }
+
+    public Sprite getSprite(){
+        return this.groundSprite;
     }
 
     public void takeDamage(Integer damage, Fixture groundCol){

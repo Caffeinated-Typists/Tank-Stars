@@ -224,7 +224,7 @@ public class GameScreen implements Screen {
         if(Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)){
 //            if(this.playerTurn) tank1.applyForceToCenter(-1f, 0, true);
 //            else tank2.applyForceToCenter(-1f, 0, true);
-            if(this.playerTurn) tank1.setLinearVelocity(-0.35f, 0);
+            if(this.playerTurn) tank1.setLinearVelocity(-0.5f, 0);
             else tank2.setLinearVelocity(-0.5f, 0);
         }else if(Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
 //            if(this.playerTurn) tank1.applyForceToCenter(1f, 0, true);

@@ -13,11 +13,17 @@ public class  Tank{
     private final Body tank;
     private final World world;
     private final Sprite tankSprite;
-    private ArrayList<Projectile> projectiles;
+    private final String projectile;
     private Integer health;
+    private boolean playerSide;
+    private final ProjectileFactory projectileFactory;
 
-    public Tank(World world, float x, float y, String SpritePath, boolean playerSide){
+    public Tank(World world, float x, float y, String SpritePath, boolean playerSide, String projectile){
         this.world = world;
+        this.playerSide = playerSide;
+        this.health = 100;
+        this.projectile = projectile;
+        this.projectileFactory = new ProjectileFactory(world);
 
         BodyDef tankDef = new BodyDef();
         tankDef.type = BodyDef.BodyType.DynamicBody;
@@ -77,12 +83,20 @@ public class  Tank{
     }
 
 //    Modify function to accept a projectile object or name
-    public void fire(){
-
+    public void fire(Integer power, Integer angle){
+        power = power * 100;
+        Projectile projectileObj = projectileFactory.createProjectile(projectile, tank.getPosition().x, tank.getPosition().y);
+        projectileObj.getProjectile().applyForceToCenter(new Vector2((float)power * (float)Math.cos(Math.toRadians(angle)), (float)power * (float)Math.sin(Math.toRadians(angle))), true);
     }
 
     public void takeDamage(Integer damage){
         this.health -= damage;
+        if(this.playerSide) this.tank.setLinearVelocity(0.5f, 0);
+        else this.tank.setLinearVelocity(-0.5f, 0);
+    }
+
+    public Integer getHealth(){
+        return this.health;
     }
 
 }

@@ -41,7 +41,7 @@ public class TankMenu implements Screen {
         menuStage = new Stage(viewport, menuBatch);
         buttongen = new ButtonGenerator();
         Gdx.input.setInputProcessor(menuStage);
-        tank1 = new Texture(Gdx.files.internal("Tank1.png"));
+        tank1 = new Texture(Gdx.files.internal("TankTexture1.png"));
         tank1.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
         //adding game background

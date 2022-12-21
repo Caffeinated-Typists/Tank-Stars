@@ -257,7 +257,7 @@ public class GameScreen implements Screen {
         for (Body body : bodies) {
             if ((body.getUserData() != null) && (body.getUserData() instanceof Sprite)) {
                 Sprite sprite = (Sprite) body.getUserData();
-                sprite.setPosition(body.getPosition().x, body.getPosition().y);
+                sprite.setPosition(body.getPosition().x - sprite.getWidth()/2, body.getPosition().y - sprite.getHeight()/2);
                 sprite.setRotation((float) Math.toDegrees(body.getAngle()));
                 sprite.draw(batch);
             }
@@ -271,7 +271,7 @@ public class GameScreen implements Screen {
 //        gameStage.draw();
 //        gameStage.act();
 //        Comment or uncomment this line to see the polygons
-        debugRenderer.render(world, camera.combined);
+//        debugRenderer.render(world, camera.combined);
 
     }
 

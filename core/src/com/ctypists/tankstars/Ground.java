@@ -58,14 +58,13 @@ public class Ground {
             groundColFixture.shape = groundColShape;
             groundCol.createFixture(groundColFixture);
 
-            if(i == 50){
-                Texture groundTexture = new Texture(Gdx.files.internal("ground.png"));
-                groundTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-                groundSprite = new Sprite(groundTexture);
-                groundSprite.setSize(0.003f, 0.5f);
-                groundSprite.setOrigin(groundSprite.getWidth() / 2, -groundSprite.getHeight() / 2);
-                groundCol.setUserData(groundSprite);
-            }
+            Texture groundTexture = new Texture(Gdx.files.internal("ground.png"));
+            groundTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            groundSprite = new Sprite(groundTexture);
+            groundSprite.setSize(0.005f, 1f);
+//                groundSprite.setOrigin(groundSprite.getWidth() / 2, groundSprite.getHeight() / 2);
+            groundSprite.setOriginCenter();
+            groundCol.setUserData(groundSprite);
 
             this.groundCols.add(groundCol);
             groundColShape.dispose();

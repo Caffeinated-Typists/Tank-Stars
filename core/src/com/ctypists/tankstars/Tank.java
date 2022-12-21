@@ -41,6 +41,7 @@ public class  Tank{
         tankSprite = new Sprite(tankTexture);
         tankSprite.setSize(0.11f, 0.14f);
         tankSprite.setOrigin(tankSprite.getWidth()/2, tankSprite.getHeight()/2);
+//        tankSprite.setOriginCenter();
         tank.setUserData(tankSprite);
 
     }

@@ -15,7 +15,7 @@ public class  Tank{
 
     private ArrayList<Projectile> projectiles;
 
-    public Tank(World world, float x, float y){
+    public Tank(World world, float x, float y, String SpritePath){
         this.world = world;
 
 //        BodyDef tankDef = new BodyDef();
@@ -36,7 +36,7 @@ public class  Tank{
         tank = tankShapeCache.createBody("TankTexture2", this.world, 0.0006f, 0.0012f);
         tank.setTransform(x, y, 0);
 
-        Texture tankTexture = new Texture(Gdx.files.internal("TankTexture2.png"));
+        Texture tankTexture = new Texture(Gdx.files.internal(SpritePath));
         tankTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         tankSprite = new Sprite(tankTexture);
         tankSprite.setSize(0.11f, 0.14f);

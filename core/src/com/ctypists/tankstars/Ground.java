@@ -1,5 +1,8 @@
 package com.ctypists.tankstars;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.physics.box2d.*;
 
 import java.io.Serializable;
@@ -7,15 +10,38 @@ import java.util.ArrayList;
 
 public class Ground implements Serializable {
 
-    private transient World world;
-    private ArrayList<Float> groundPos;
+    private final World world;
+    private final ArrayList<Float> groundPos;
     private ArrayList<Float> groundHeights;
-    private transient ArrayList<Body> groundCols;
+    private ArrayList<Body> groundCols;
+    private Sprite groundSprite;
 
-    public Ground(World world, ArrayList<Float> groundPos, ArrayList<Float> groundHeights) {
+    public Ground(World world) {
         this.world = world;
-        this.groundPos = groundPos;
-        this.groundHeights = groundHeights;
+
+        this.groundCols = new ArrayList<Body>();
+        this.groundPos = new ArrayList<Float>();
+        this.groundHeights = new ArrayList<Float>();
+
+        for(float i = -1; i < 1; i += 0.005){
+            groundPos.add(i);
+//            if(i <= -0.9){
+//                groundHeights.add(1.4f + i);
+//            }else if(i <= -0.2){
+//                groundHeights.add(0.5f);
+//            }else if(i <= 0.1){
+//                groundHeights.add(0.5f - 0.65f*(i + 0.2f));
+//            }else if(i <= 0.2){
+//                groundHeights.add(0.3f);
+//            }else if(i <= 0.4){
+//                groundHeights.add((i + 0.2f)/2 + 0.1f);
+//            }else if(i <= 1){
+//                groundHeights.add(0.4f);
+//            }
+//            groundHeights.add(0.5f + (float)Math.sin(i*4)*0.1f);
+            groundHeights.add(0.5f);
+        }
+
         this.createGround();
     }
 
@@ -32,9 +58,26 @@ public class Ground implements Serializable {
             groundColShape.setAsBox((float)0.005, groundHeights.get(i));
             groundColFixture.shape = groundColShape;
             groundCol.createFixture(groundColFixture);
+
+            Texture groundTexture = new Texture(Gdx.files.internal("ground.png"));
+            groundTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            groundSprite = new Sprite(groundTexture);
+            groundSprite.setSize(0.005f, 1f);
+//                groundSprite.setOrigin(groundSprite.getWidth() / 2, groundSprite.getHeight() / 2);
+            groundSprite.setOriginCenter();
+            groundCol.setUserData(groundSprite);
+
             this.groundCols.add(groundCol);
             groundColShape.dispose();
         }
+    }
+
+    public ArrayList<Float> getGroundPos(){
+        return this.groundPos;
+    }
+
+    public ArrayList<Float> getGroundHeights(){
+        return this.groundHeights;
     }
 
     public ArrayList<Body> getGroundCols() {

@@ -24,6 +24,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 import java.io.FileNotFoundException;
@@ -69,6 +71,8 @@ public class GameScreen implements Screen {
     private ArrayList<Float> groundHeights;
     private ArrayList<Float> groundPos;
 
+    private Array<Body> bodies;
+
     private State state = State.RUN;
     private boolean isPaused = false;
     private boolean playerTurn = false; // false = player 1, true = player 2
@@ -89,27 +93,27 @@ public class GameScreen implements Screen {
 
         debugRenderer = new Box2DDebugRenderer();
 
-        groundHeights = new ArrayList<Float>();
-        groundPos = new ArrayList<Float>();
-        for(float i = -1; i <= 1; i += 0.005){
-            groundPos.add(i);
-//            groundHeights.add(0.3f);
-            groundHeights.add(0.45f + 0.05f * (float)Math.sin(i * 10));
-        }
-        groundObj = new Ground(world, groundPos, groundHeights);
-        groundCols = groundObj.getGroundCols();
+        groundObj = new Ground(world);
+//        groundPos = groundObj.getGroundPos();
+//        groundHeights = groundObj.getGroundHeights();
+//        groundCols = groundObj.getGroundCols();
 
 //      Pass an argument to define the tank being used
-        tank1Obj = new Tank(world, 0.45f, 0.1f);
-        tank2Obj = new Tank(world, -0.45f, 0.1f);
+        TankFactory tankFactory = new TankFactory(world);
+        tank1Obj = tankFactory.createTank("Tank1", 0.45f, 0.1f);
+//        tank1Obj = new Tank(world, 0.45f, 0.1f, "TankTexture2.png");
+        tank2Obj = tankFactory.createTank("Tank2", -0.45f, 0.1f);
+//        tank2Obj = new Tank(world, -0.45f, 0.1f, "TankTexture2.png");
         tank1 = tank1Obj.getTank();
         tank2 = tank2Obj.getTank();
         tank1Sprite = tank1Obj.getSprite();
         tank2Sprite = tank2Obj.getSprite();
 
-        font = new BitmapFont(Gdx.files.internal("font.fnt"));
-        font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        font.getData().setScale(0.5f);
+        bodies = new Array<Body>();
+
+//        font = new BitmapFont(Gdx.files.internal("font.fnt"));
+//        font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+//        font.getData().setScale(0.5f);
 
         // creating pause menu
 //        pauseMenu = new PauseMenu();
@@ -164,15 +168,15 @@ public class GameScreen implements Screen {
 
 
         // health bar experiment
-        HealthBar healthBarL = new HealthBar(), healthBarR = new HealthBar();
-        healthBarL.HealthBarL();
-        healthBarR.HealthBarR();
+//        HealthBar healthBarL = new HealthBar(), healthBarR = new HealthBar();
+//        healthBarL.HealthBarL();
+//        healthBarR.HealthBarR();
 
-        healthBarR.setBounds(TankStars.WIDTH/2f + 50, TankStars.HEIGHT - 10 - healthBarL.getHeight(), healthBarR.getWidth(), healthBarR.getHeight());
-        healthBarL.setBounds(TankStars.WIDTH/2f - healthBarL.getWidth() - 50, TankStars.HEIGHT - 10 - healthBarL.getHeight(), healthBarL.getWidth(), healthBarL.getHeight());
+//        healthBarR.setBounds(TankStars.WIDTH/2f + 50, TankStars.HEIGHT - 10 - healthBarL.getHeight(), healthBarR.getWidth(), healthBarR.getHeight());
+//        healthBarL.setBounds(TankStars.WIDTH/2f - healthBarL.getWidth() - 50, TankStars.HEIGHT - 10 - healthBarL.getHeight(), healthBarL.getWidth(), healthBarL.getHeight());
 
-        healthBarL.setHealth(0.5f);
-        healthBarR.setHealth(0.2f);
+//        healthBarL.setHealth(0.5f);
+//        healthBarR.setHealth(0.2f);
 
         gameStage.addActor(fireButton);
         gameStage.addActor(pauseIcon);
@@ -205,10 +209,13 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT |
-                GL20.GL_DEPTH_BUFFER_BIT |
-                (Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
-        Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
+//        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT |
+//                GL20.GL_DEPTH_BUFFER_BIT |
+//                (Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
+//        Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
+
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
 
 //        switch (state){
 //            case RUN:
@@ -216,49 +223,62 @@ public class GameScreen implements Screen {
 //                break;
 //        }
 
-        // tank movements and controls
-        if(Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-            if(this.playerTurn) tank1.applyForceToCenter(-0.2f, 0, true);
-            else tank2.applyForceToCenter(-0.2f, 0, true);
-        }else if(Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-            if(this.playerTurn) tank1.applyForceToCenter(0.2f, 0, true);
-            else tank2.applyForceToCenter(0.2f, 0, true);
-        }
-
-//        if(Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)){
-//            tank1.applyForceToCenter(0, 1, true);
-//        }else if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-//            tank1.applyForceToCenter(0, -1, true);
+//        // tank movements and controls
+//        if(Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)){
+////            if(this.playerTurn) tank1.applyForceToCenter(-1f, 0, true);
+////            else tank2.applyForceToCenter(-1f, 0, true);
+//            if(this.playerTurn) tank1.setLinearVelocity(-0.5f, 0);
+//            else tank2.setLinearVelocity(-0.5f, 0);
+//        }else if(Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
+////            if(this.playerTurn) tank1.applyForceToCenter(1f, 0, true);
+////            else tank2.applyForceToCenter(1f, 0, true);
+//            if(this.playerTurn) tank1.setLinearVelocity(0.5f, 0);
+//            else tank2.setLinearVelocity(0.5f, 0);
 //        }
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
-            if(this.playerTurn){
-                tank2Obj.fire();
-            }else{
-                tank1Obj.fire();
-            }
-            this.playerTurn = !this.playerTurn;
-        }
+//
+//        if(Gdx.input.isKeyPressed(Input.Keys.I)){
+////            System.out.println("Zoom kar");
+//            camera.zoom += 0.02;
+//        }else if(Gdx.input.isKeyPressed(Input.Keys.O)){
+////            System.out.println("Zoom kar");
+//            camera.zoom -= 0.02;
+//        }
+//
+////        if(Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)){
+////            tank1.applyForceToCenter(0, 1, true);
+////        }else if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)){
+////            tank1.applyForceToCenter(0, -1, true);
+////        }
+//
+//        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
+//            if(this.playerTurn){
+//                tank2Obj.fire();
+//            }else{
+//                tank1Obj.fire();
+//            }
+//            this.playerTurn = !this.playerTurn;
+//        }
 
         stepWorld();
 
+        camera.position.set(tank1.getPosition().x, tank1.getPosition().y, 0);
+//        camera.update();
+
+        batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
         // background
-        batch.draw(gamebackground, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+//        batch.draw(gamebackground, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-
-        // Ground
-        renderGround();
-
-        // tanks
-        tank1Sprite.setPosition(Gdx.graphics.getWidth()/2 + tank1.getPosition().x*(Gdx.graphics.getWidth()/2) - 55, Gdx.graphics.getHeight()/2 + tank1.getPosition().y*(Gdx.graphics.getHeight()/2) - 35);
-//        tank1Sprite.setRotation((float)Math.toDegrees(tank1.getAngle()));
-        tank1Sprite.draw(batch);
-
-        tank2Sprite.setPosition(Gdx.graphics.getWidth()/2 + tank2.getPosition().x*(Gdx.graphics.getWidth()/2) - 55, Gdx.graphics.getHeight()/2 + tank2.getPosition().y*(Gdx.graphics.getHeight()/2) - 35);
-//        tank2Sprite.setRotation((float)Math.toDegrees(tank2.getAngle()));
-        tank2Sprite.draw(batch);
+        world.getBodies(bodies);
+        for (Body body : bodies) {
+            if ((body.getUserData() != null) && (body.getUserData() instanceof Sprite)) {
+                Sprite sprite = (Sprite) body.getUserData();
+                sprite.setPosition(body.getPosition().x - sprite.getWidth()/2, body.getPosition().y - sprite.getHeight()/2);
+                sprite.setRotation((float) Math.toDegrees(body.getAngle()));
+                sprite.draw(batch);
+            }
+        }
 
 //        font.draw(batch, "FUEL", 100 + fuel.getWidth() / 3f, 30 + fuel.getHeight() / 3f);
         fuelTexture.setRegionWidth((int) (fuel.getWidth() * fuel_level));
@@ -270,17 +290,6 @@ public class GameScreen implements Screen {
 //        Comment or uncomment this line to see the polygons
         debugRenderer.render(world, camera.combined);
         save_game();
-    }
-
-    private void renderGround(){
-        for(int i = 0; i < groundCols.size(); i++){
-            Body groundCol = groundCols.get(i);
-            Vector2 pos = groundCol.getPosition();
-            float width = 1.7f;
-//            float height = groundCol.getFixtureList().get(0).getShape().ge
-            float height = groundHeights.get(i)*312;
-            batch.draw(ground, Gdx.graphics.getWidth()/2 + pos.x*(Gdx.graphics.getWidth()/2), 0, width*2, height*2);
-        }
     }
 
     private void stepWorld(){

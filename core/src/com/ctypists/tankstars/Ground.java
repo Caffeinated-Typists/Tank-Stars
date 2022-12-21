@@ -72,6 +72,7 @@ public class Ground implements Serializable {
             groundSprite.setOriginCenter();
             groundCol.setUserData(groundSprite);
 
+
             this.groundCols.add(groundCol);
             groundColShape.dispose();
         }

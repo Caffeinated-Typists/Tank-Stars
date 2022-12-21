@@ -70,7 +70,10 @@ public class GameScreen implements Screen {
     private ArrayList<Body> groundCols;
     private ArrayList<Float> groundHeights;
     private ArrayList<Float> groundPos;
-
+    private float scalingX = 0.0014880952f;
+    private float scalingY = 0.0032206119f;
+    private float scaleX = 672;
+    private float scaleY = 310.5f;
     private Array<Body> bodies;
 
     private State state = State.RUN;
@@ -82,9 +85,9 @@ public class GameScreen implements Screen {
         this.game = game;
 
         batch = new SpriteBatch();
-        camera = new OrthographicCamera();
+        camera = new OrthographicCamera(Gdx.graphics.getWidth()/672f, Gdx.graphics.getHeight()/310.5f);
         viewport = new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
-        gameStage = new Stage(viewport, batch);
+//        gameStage = new Stage(viewport, batch);
         buttongen = new ButtonGenerator();
 
 
@@ -168,21 +171,21 @@ public class GameScreen implements Screen {
 
 
         // health bar experiment
-//        HealthBar healthBarL = new HealthBar(), healthBarR = new HealthBar();
-//        healthBarL.HealthBarL();
-//        healthBarR.HealthBarR();
+        HealthBar healthBarL = new HealthBar(), healthBarR = new HealthBar();
+        healthBarL.HealthBarL();
+        healthBarR.HealthBarR();
 
-//        healthBarR.setBounds(TankStars.WIDTH/2f + 50, TankStars.HEIGHT - 10 - healthBarL.getHeight(), healthBarR.getWidth(), healthBarR.getHeight());
-//        healthBarL.setBounds(TankStars.WIDTH/2f - healthBarL.getWidth() - 50, TankStars.HEIGHT - 10 - healthBarL.getHeight(), healthBarL.getWidth(), healthBarL.getHeight());
+        healthBarR.setBounds(TankStars.WIDTH/2f + 50, TankStars.HEIGHT - 10 - healthBarL.getHeight(), healthBarR.getWidth(), healthBarR.getHeight());
+        healthBarL.setBounds(TankStars.WIDTH/2f - healthBarL.getWidth() - 50, TankStars.HEIGHT - 10 - healthBarL.getHeight(), healthBarL.getWidth(), healthBarL.getHeight());
 
-//        healthBarL.setHealth(0.5f);
-//        healthBarR.setHealth(0.2f);
+        healthBarL.setHealth(0.5f);
+        healthBarR.setHealth(0.2f);
 
-        gameStage.addActor(fireButton);
-        gameStage.addActor(pauseIcon);
-        gameStage.addActor(touchpad);
-        gameStage.addActor(healthBarR);
-        gameStage.addActor(healthBarL);
+//        gameStage.addActor(fireButton);
+//        gameStage.addActor(pauseIcon);
+//        gameStage.addActor(touchpad);
+//        gameStage.addActor(healthBarR);
+//        gameStage.addActor(healthBarL);
 
     }
 
@@ -209,13 +212,10 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-//        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT |
-//                GL20.GL_DEPTH_BUFFER_BIT |
-//                (Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
-//        Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
-
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT |
+                GL20.GL_DEPTH_BUFFER_BIT |
+                (Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
+        Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
 
 //        switch (state){
 //            case RUN:
@@ -236,13 +236,13 @@ public class GameScreen implements Screen {
 //            else tank2.setLinearVelocity(0.5f, 0);
 //        }
 //
-//        if(Gdx.input.isKeyPressed(Input.Keys.I)){
-////            System.out.println("Zoom kar");
-//            camera.zoom += 0.02;
-//        }else if(Gdx.input.isKeyPressed(Input.Keys.O)){
-////            System.out.println("Zoom kar");
-//            camera.zoom -= 0.02;
-//        }
+        if(Gdx.input.isKeyPressed(Input.Keys.I)){
+//            System.out.println("Zoom kar");
+            camera.zoom -= 0.02;
+        }else if(Gdx.input.isKeyPressed(Input.Keys.O)){
+//            System.out.println("Zoom kar");
+            camera.zoom += 0.02;
+        }
 //
 ////        if(Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)){
 ////            tank1.applyForceToCenter(0, 1, true);
@@ -261,19 +261,27 @@ public class GameScreen implements Screen {
 
         stepWorld();
 
-        camera.position.set(tank1.getPosition().x, tank1.getPosition().y, 0);
-//        camera.update();
+//        camera.position.set(0, 0, 0);
+        camera.update();
+//        System.out.println(camera.position);
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
         // background
-//        batch.draw(gamebackground, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.draw(gamebackground, -1, -1, Gdx.graphics.getWidth() * scalingX, Gdx.graphics.getHeight() * scalingY);
 
         world.getBodies(bodies);
+//        boolean print = true;
         for (Body body : bodies) {
+//            if(print) {
+//                System.out.println(body.getPosition());
+//                print = false;
+//            }
             if ((body.getUserData() != null) && (body.getUserData() instanceof Sprite)) {
+//                System.out.println(body.getPosition());
                 Sprite sprite = (Sprite) body.getUserData();
+                sprite.setBounds(body.getPosition().x - sprite.getWidth() / 2, body.getPosition().y - sprite.getHeight() / 2, sprite.getWidth(), sprite.getHeight());
                 sprite.setPosition(body.getPosition().x - sprite.getWidth()/2, body.getPosition().y - sprite.getHeight()/2);
                 sprite.setRotation((float) Math.toDegrees(body.getAngle()));
                 sprite.draw(batch);
@@ -282,11 +290,11 @@ public class GameScreen implements Screen {
 
 //        font.draw(batch, "FUEL", 100 + fuel.getWidth() / 3f, 30 + fuel.getHeight() / 3f);
         fuelTexture.setRegionWidth((int) (fuel.getWidth() * fuel_level));
-        batch.draw(fuelTexture, 0, 0);
+//        batch.draw(fuelTexture, 0, 0);
         batch.end();
 
-        gameStage.draw();
-        gameStage.act();
+//        gameStage.draw();
+//        gameStage.act();
 //        Comment or uncomment this line to see the polygons
         debugRenderer.render(world, camera.combined);
         save_game();

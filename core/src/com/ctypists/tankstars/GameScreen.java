@@ -247,9 +247,9 @@ public class GameScreen implements Screen {
 //
         if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
             if(this.playerTurn){
-                tank2Obj.fire();
+                tank2Obj.fire(50, 60);
             }else{
-                tank1Obj.fire();
+                tank1Obj.fire(50, 60);
             }
             this.playerTurn = !this.playerTurn;
         }
@@ -276,9 +276,12 @@ public class GameScreen implements Screen {
                 }else if(body.getUserData() instanceof Projectile){
                     Projectile projectile = (Projectile) body.getUserData();
                     sprite = projectile.getSprite();
-                }else if(body.getUserData() instanceof Ground){
-                    Ground ground = (Ground) body.getUserData();
-                    sprite = ground.getSprite();
+                }else if(body.getUserData() instanceof GroundCol){
+                    GroundCol groundCol = (GroundCol) body.getUserData();
+                    sprite = groundCol.getSprite();
+                }else{
+                    System.out.println(body.getUserData().getClass());
+                    continue;
                 }
                 sprite.setPosition(body.getPosition().x - sprite.getWidth()/2, body.getPosition().y - sprite.getHeight()/2);
                 sprite.setRotation((float) Math.toDegrees(body.getAngle()));

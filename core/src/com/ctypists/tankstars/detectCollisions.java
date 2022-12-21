@@ -28,8 +28,9 @@ public class detectCollisions  implements ContactListener {
                 Projectile projectile = (Projectile) fixtureB.getUserData();
                 tank.takeDamage(projectile.getDamage());
                 projectile.destroyProjectile();
-            }else if(fixtureA.getUserData() instanceof Ground) {
-                Ground ground = (Ground) fixtureA.getUserData();
+            }else if(fixtureA.getUserData() instanceof GroundCol) {
+                GroundCol groundCol = (GroundCol) fixtureA.getUserData();
+                Ground ground = groundCol.getGround();
                 Projectile projectile = (Projectile) fixtureB.getUserData();
                 ground.takeDamage(projectile.getDamage(), fixtureA);
                 projectile.destroyProjectile();

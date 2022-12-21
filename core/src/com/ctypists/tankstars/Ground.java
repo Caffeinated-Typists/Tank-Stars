@@ -44,7 +44,7 @@ public class Ground implements Serializable {
 //            groundHeights.add(0.5f);
 
             // Sinusoidal ground
-            groundHeights.add(0.5f + (float)Math.sin(i*4)*0.1f);
+            groundHeights.add(0.4f + (float)Math.sin(i*4)*0.05f);
         }
 
         this.createGround();

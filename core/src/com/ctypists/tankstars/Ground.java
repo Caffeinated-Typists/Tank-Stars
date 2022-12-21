@@ -63,26 +63,26 @@ public class Ground implements Serializable {
     private void createGround() {
         this.groundCols = new ArrayList<GroundCol>();
         for(int i = 0; i < groundHeights.size(); i++){
-            BodyDef groundColDef = new BodyDef();
-            groundColDef.type = BodyDef.BodyType.StaticBody;
-            groundColDef.position.set(groundPos.get(i), groundHeights.get(i) - 1);
-            Body groundCol = world.createBody(groundColDef);
-            FixtureDef groundColFixture = new FixtureDef();
-            groundColFixture.friction = 1f;
-            PolygonShape groundColShape = new PolygonShape();
-            groundColShape.setAsBox((float)0.005, groundHeights.get(i));
-            groundColFixture.shape = groundColShape;
-            groundCol.createFixture(groundColFixture).setUserData(this);
+//            BodyDef groundColDef = new BodyDef();
+//            groundColDef.type = BodyDef.BodyType.StaticBody;
+//            groundColDef.position.set(groundPos.get(i), groundHeights.get(i) - 1);
+//            Body groundCol = world.createBody(groundColDef);
+//            FixtureDef groundColFixture = new FixtureDef();
+//            groundColFixture.friction = 1f;
+//            PolygonShape groundColShape = new PolygonShape();
+//            groundColShape.setAsBox((float)0.005, groundHeights.get(i));
+//            groundColFixture.shape = groundColShape;
+//            groundCol.createFixture(groundColFixture).setUserData(this);
 
-            Texture groundTexture = new Texture(Gdx.files.internal("ground.png"));
-            groundTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-            groundSprite = new Sprite(groundTexture);
-            groundSprite.setSize(0.005f, groundHeights.get(i)*2.4f);
-            groundSprite.setOriginCenter();
-            groundCol.setUserData(this);
-
+//            Texture groundTexture = new Texture(Gdx.files.internal("ground.png"));
+//            groundTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+//            groundSprite = new Sprite(groundTexture);
+//            groundSprite.setSize(0.005f, groundHeights.get(i)*2.4f);
+//            groundSprite.setOriginCenter();
+//            groundCol.setUserData(this);
+            GroundCol groundCol = new GroundCol(world, groundPos.get(i), groundHeights.get(i), this);
             this.groundCols.add(groundCol);
-            groundColShape.dispose();
+//            groundColShape.dispose();
         }
     }
 
@@ -116,9 +116,33 @@ class GroundCol{
 
     private final Body groundCol;
     private final Sprite groundSprite;
+    private final Ground ground;
 
-    public GroundCol(){
+    public GroundCol(World world, float x, float y, Ground ground){
+        this.ground = ground;
+        BodyDef groundColDef = new BodyDef();
+        groundColDef.type = BodyDef.BodyType.StaticBody;
+        groundColDef.position.set(x, y - 1);
+        groundCol = world.createBody(groundColDef);
+        FixtureDef groundColFixture = new FixtureDef();
+        groundColFixture.friction = 1f;
+        PolygonShape groundColShape = new PolygonShape();
+        groundColShape.setAsBox((float)0.005, y);
+        groundColFixture.shape = groundColShape;
+        groundCol.createFixture(groundColFixture).setUserData(ground);
 
+        Texture groundTexture = new Texture(Gdx.files.internal("ground.png"));
+        groundTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        groundSprite = new Sprite(groundTexture);
+        groundSprite.setSize(0.005f, y*2.4f);
+        groundSprite.setOriginCenter();
+        groundCol.setUserData(ground);
+
+        groundColShape.dispose();
+    }
+
+    public Ground getGround(){
+        return this.ground;
     }
 
     public Body getGroundCol(){
@@ -127,6 +151,10 @@ class GroundCol{
 
     public Sprite getSprite(){
         return this.groundSprite;
+    }
+
+    public void takeDamage(Integer damage){
+
     }
 
 

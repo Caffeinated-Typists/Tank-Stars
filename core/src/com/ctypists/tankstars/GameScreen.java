@@ -111,25 +111,6 @@ public class GameScreen implements Screen {
 
         bodies = new Array<Body>();
 
-//        font = new BitmapFont(Gdx.files.internal("font.fnt"));
-//        font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-//        font.getData().setScale(0.5f);
-
-        // creating pause menu
-//        pauseMenu = new PauseMenu();
-//        pauseMenu.resumeButton.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-//                if (isPaused){
-//                    System.out.println("Resume button clicked");
-//                    gameStage.getActors().removeValue(pauseMenu, true);
-//                    isPaused = false;
-//                }
-//            }
-//        });
-
-//        buttongen.setNextScreen(pauseMenu.saveButton, new MainScreen(game), game);
-//        buttongen.setNextScreen(pauseMenu.exitButton, new MainScreen(game), game);
 
 
 
@@ -147,16 +128,7 @@ public class GameScreen implements Screen {
         pauseIconTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         pauseIcon = new ImageButton(new TextureRegionDrawable(new TextureRegion(pauseIconTexture)));
         pauseIcon.setBounds(10, Gdx.graphics.getHeight() - pauseIcon.getHeight()/2 - 10, pauseIcon.getWidth() / 2, pauseIcon.getHeight() / 2);
-//        pauseIcon.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-//                System.out.println("pause");
-//                if (!isPaused) {
-//                    gameStage.addActor(pauseMenu);
-//                    isPaused = true;
-//                }
-//            }
-//        });
+
         buttongen.setNextScreen(pauseIcon, new PauseMenuAlt(game, this), game);
 
         // joystick
@@ -168,15 +140,15 @@ public class GameScreen implements Screen {
 
 
         // health bar experiment
-//        HealthBar healthBarL = new HealthBar(), healthBarR = new HealthBar();
-//        healthBarL.HealthBarL();
-//        healthBarR.HealthBarR();
+        HealthBar healthBarL = new HealthBar(), healthBarR = new HealthBar();
+        healthBarL.HealthBarL();
+        healthBarR.HealthBarR();
 
-//        healthBarR.setBounds(TankStars.WIDTH/2f + 50, TankStars.HEIGHT - 10 - healthBarL.getHeight(), healthBarR.getWidth(), healthBarR.getHeight());
-//        healthBarL.setBounds(TankStars.WIDTH/2f - healthBarL.getWidth() - 50, TankStars.HEIGHT - 10 - healthBarL.getHeight(), healthBarL.getWidth(), healthBarL.getHeight());
+        healthBarR.setBounds(TankStars.WIDTH/2f + 50, TankStars.HEIGHT - 10 - healthBarL.getHeight(), healthBarR.getWidth(), healthBarR.getHeight());
+        healthBarL.setBounds(TankStars.WIDTH/2f - healthBarL.getWidth() - 50, TankStars.HEIGHT - 10 - healthBarL.getHeight(), healthBarL.getWidth(), healthBarL.getHeight());
 
-//        healthBarL.setHealth(0.5f);
-//        healthBarR.setHealth(0.2f);
+        healthBarL.setHealth(0.5f);
+        healthBarR.setHealth(0.2f);
 
         gameStage.addActor(fireButton);
         gameStage.addActor(pauseIcon);
@@ -285,11 +257,11 @@ public class GameScreen implements Screen {
         batch.draw(fuelTexture, 0, 0);
         batch.end();
 
-        gameStage.draw();
-        gameStage.act();
+//        gameStage.draw();
+//        gameStage.act();
 //        Comment or uncomment this line to see the polygons
         debugRenderer.render(world, camera.combined);
-        save_game();
+//        save_game();
     }
 
     private void stepWorld(){

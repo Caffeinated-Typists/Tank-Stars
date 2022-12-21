@@ -82,10 +82,14 @@ public class  Tank{
     }
 
 //    Modify function to accept a projectile object or name
-    public void fire(Integer power, Integer angle){
-        power = power * 100;
-        Projectile projectileObj = projectileFactory.createProjectile(projectile, tank.getPosition().x, tank.getPosition().y);
-        projectileObj.getProjectile().applyForceToCenter(new Vector2((float)power * (float)Math.cos(Math.toRadians(angle)), (float)power * (float)Math.sin(Math.toRadians(angle))), true);
+    public void fire(float power, float angle){
+        power = power * 0.01f;
+        System.out.println("Power: " + power);
+        System.out.println("Angle: " + angle);
+        System.out.println("X - pos: " + tank.getPosition().x);
+        System.out.println("Y - pos: " + tank.getPosition().y);
+//        Projectile projectileObj = projectileFactory.createProjectile(projectile, this.tank.getPosition().x, this.tank.getPosition().y);
+//        projectileObj.getProjectile().setLinearVelocity((float)power * (float)Math.cos(Math.toRadians(angle)), (float)power * (float)Math.sin(Math.toRadians(angle)));
     }
 
     public void takeDamage(Integer damage){

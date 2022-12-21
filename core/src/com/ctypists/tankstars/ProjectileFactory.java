@@ -16,7 +16,7 @@ public class ProjectileFactory {
         this.projectileDamage = new HashMap<String, Integer>();
         this.projectileTexturesPath.put("Projectile1", "ProjectileTexture1.png");
         this.projectileTexturesPath.put("Projectile2", "ProjectileTexture2.png");
-        this.projectileDamage.put("Projectile1", 30);
+        this.projectileDamage.put("Projectile1", 20);
         this.projectileDamage.put("Projectile2", 30);
     }
 

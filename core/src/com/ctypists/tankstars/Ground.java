@@ -103,11 +103,10 @@ public class Ground implements Serializable {
     }
 
     public void takeDamage(Integer damage, Fixture groundCol){
-//        int index = groundCols.indexOf(groundCol.getBody());
-//        for(int i = Math.max(index - damage/5, 0); i < Math.min(index + damage/5, groundHeights.size()); i++){
-//            groundHeights.set(i, groundHeights.get(i) - damage/100f);
-//            groundCols.get(i).getUserData().getSprite().setSize(0.005f, groundHeights.get(i)*2f);
-//        }
+        int index = groundCols.indexOf(groundCol.getBody());
+        for(int i = Math.max(index - damage/5, 0); i < Math.min(index + damage/5, groundHeights.size()); i++){
+            groundCols.get(i).takeDamage(damage/(Math.abs(i - index) + 1));
+        }
     }
 
     public boolean equals(Object obj) {
@@ -167,9 +166,6 @@ class GroundCol{
     public void takeDamage(Integer damage){
 
     }
-
-
-
 
 
 }

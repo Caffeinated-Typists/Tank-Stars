@@ -5,9 +5,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.physics.box2d.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Ground {
+public class Ground implements Serializable {
 
     private final World world;
     private final ArrayList<Float> groundPos;

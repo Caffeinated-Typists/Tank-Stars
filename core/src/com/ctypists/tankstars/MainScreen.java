@@ -17,7 +17,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 public class MainScreen implements Screen {
 
-    private Game game;
+    private TankStars game;
     private OrthographicCamera camera;
     private ExtendViewport viewport;
     private SpriteBatch batch;
@@ -27,7 +27,7 @@ public class MainScreen implements Screen {
     private Sprite backgroundSprite;
     private ButtonGenerator buttongen;
 
-    public MainScreen(Game game) {
+    public MainScreen(TankStars game) {
         this.game = game;
     }
 

@@ -26,16 +26,26 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class GameScreen implements Screen {
     private static final float STEP_TIME = 1f / 60f;
     private static final int VELOCITY_ITERATIONS = 6;
     private static final int POSITION_ITERATIONS = 2;
 
-    private Game game;
+    private TankStars game;
     private SpriteBatch batch;
     private Texture gamebackground, ground, joystick, fuel;
+    private TextureRegion fuelTexture;
     private OrthographicCamera camera;
     private ExtendViewport viewport;
     private Stage gameStage;
@@ -48,6 +58,7 @@ public class GameScreen implements Screen {
     private BitmapFont font;
     private Joystick joystickgen;
     private HealthBar healthBarL, healthBarR;
+    private float fuel_level = 0.7f;
 
     private World world;
     private Box2DDebugRenderer debugRenderer;
@@ -67,14 +78,15 @@ public class GameScreen implements Screen {
     private boolean playerTurn = false; // false = player 1, true = player 2
     // Player 1 is on the left, player 2 is on the right
 
-    public GameScreen(Game game) {
+    public GameScreen(TankStars game) {
         this.game = game;
 
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
         viewport = new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
-//        gameStage = new Stage(viewport, batch);
-//        buttongen = new ButtonGenerator();
+        gameStage = new Stage(viewport, batch);
+        buttongen = new ButtonGenerator();
+
 
         Box2D.init();
         world = new World(new Vector2(0, -9.81f), true);
@@ -122,17 +134,19 @@ public class GameScreen implements Screen {
 
 
         // fire button
-//        fireButton = buttongen.createButton("FIRE", String.valueOf(Gdx.files.internal("fire.png")));
-//        fireButton.setBounds(Gdx.graphics.getWidth() * 0.75f - fireButton.getWidth() / 2,
-//                Gdx.graphics.getHeight() * 0.25f - fireButton.getHeight() / 2,
-//                fireButton.getWidth() / 2,
-//                fireButton.getHeight() / 2);
+        fireButton = buttongen.createButton("FIRE", String.valueOf(Gdx.files.internal("fire.png")));
+        fireButton.setBounds(Gdx.graphics.getWidth() * 0.7f - fireButton.getWidth() / 2,
+                Gdx.graphics.getHeight() * 0.3f - fireButton.getHeight() / 2,
+                fireButton.getWidth() / 1.75f,
+                fireButton.getHeight() / 1.75f);
+//        fireButton.getData().setScale(0.5f);
+        buttongen.setScalableButton(fireButton, 1.15f);
 
         // adding pause menu icon
-//        Texture pauseIconTexture = new Texture(Gdx.files.internal("menuIcon.png"));
-//        pauseIconTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-//        pauseIcon = new ImageButton(new TextureRegionDrawable(new TextureRegion(pauseIconTexture)));
-//        pauseIcon.setBounds(10, Gdx.graphics.getHeight() - pauseIcon.getHeight()/2 - 10, pauseIcon.getWidth() / 2, pauseIcon.getHeight() / 2);
+        Texture pauseIconTexture = new Texture(Gdx.files.internal("menuIcon.png"));
+        pauseIconTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        pauseIcon = new ImageButton(new TextureRegionDrawable(new TextureRegion(pauseIconTexture)));
+        pauseIcon.setBounds(10, Gdx.graphics.getHeight() - pauseIcon.getHeight()/2 - 10, pauseIcon.getWidth() / 2, pauseIcon.getHeight() / 2);
 //        pauseIcon.addListener(new ClickListener() {
 //            @Override
 //            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
@@ -143,16 +157,15 @@ public class GameScreen implements Screen {
 //                }
 //            }
 //        });
+        buttongen.setNextScreen(pauseIcon, new PauseMenuAlt(game, this), game);
 
         // joystick
-//        joystickgen = new Joystick();
-//        Touchpad touchpad = joystickgen.getTouchpad();
-//        touchpad.setBounds(Gdx.graphics.getWidth() - touchpad.getWidth() - 10, 10, touchpad.getWidth(), touchpad.getHeight());
-//        touchpad.setResetOnTouchUp(false);
+        joystickgen = new Joystick();
+        Touchpad touchpad = joystickgen.getTouchpad();
+        touchpad.setBounds(Gdx.graphics.getWidth() - touchpad.getWidth() - 20, 20, touchpad.getWidth(), touchpad.getHeight());
+        touchpad.setResetOnTouchUp(true);
 
-        // fuel knob
-//        Touchpad fuelKnob = joystickgen.getFuelTouchpad();
-//        fuelKnob.setBounds(10, 10, 100, 50);
+
 
         // health bar experiment
 //        HealthBar healthBarL = new HealthBar(), healthBarR = new HealthBar();
@@ -165,23 +178,25 @@ public class GameScreen implements Screen {
 //        healthBarL.setHealth(0.5f);
 //        healthBarR.setHealth(0.2f);
 
-//        gameStage.addActor(fuelKnob);
-//        gameStage.addActor(fireButton);
-//        gameStage.addActor(pauseIcon);
-//        gameStage.addActor(touchpad);
-//        gameStage.addActor(healthBarR);
-//        gameStage.addActor(healthBarL);
+        gameStage.addActor(fireButton);
+        gameStage.addActor(pauseIcon);
+        gameStage.addActor(touchpad);
+        gameStage.addActor(healthBarR);
+        gameStage.addActor(healthBarL);
 
     }
 
     @Override
     public void show() {
         // Textures
-//        fuel = new Texture(Gdx.files.internal("fuel.png"));
-//        joystick = new Texture(Gdx.files.internal("aim.png"));
-//        gamebackground = new Texture(Gdx.files.internal("gameBackground.png"));
-//        gamebackground.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-//        Gdx.input.setInputProcessor(gameStage);
+        fuel = new Texture(Gdx.files.internal("fuel.png"));
+        fuelTexture = new TextureRegion(fuel, 0, 0, fuel.getWidth()  / 2, fuel.getHeight());
+        joystick = new Texture(Gdx.files.internal("aim.png"));
+        gamebackground = new Texture(Gdx.files.internal("gameBackground.png"));
+        ground = new Texture(Gdx.files.internal("ground.png"));
+        gamebackground.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        ground.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        Gdx.input.setInputProcessor(gameStage);
 //        pauseIcon.addListener(new ClickListener() {
 //            @Override
 //            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
@@ -189,7 +204,6 @@ public class GameScreen implements Screen {
 //                gameStage.addActor(pauseMenu);
 //            }
 //        });
-
 
     }
 
@@ -266,16 +280,16 @@ public class GameScreen implements Screen {
             }
         }
 
-//        batch.draw(fuel, 100, 30, fuel.getWidth()/3f, fuel.getHeight()/3f);
-
 //        font.draw(batch, "FUEL", 100 + fuel.getWidth() / 3f, 30 + fuel.getHeight() / 3f);
+        fuelTexture.setRegionWidth((int) (fuel.getWidth() * fuel_level));
+        batch.draw(fuelTexture, 0, 0);
         batch.end();
 
-//        gameStage.draw();
-//        gameStage.act();
+        gameStage.draw();
+        gameStage.act();
 //        Comment or uncomment this line to see the polygons
         debugRenderer.render(world, camera.combined);
-
+        save_game();
     }
 
     private void stepWorld(){
@@ -286,6 +300,36 @@ public class GameScreen implements Screen {
             accumulator -= STEP_TIME;
             world.step(STEP_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
         }
+    }
+
+    public void save_game(){
+        // serializes the game state
+        if (!game.save_state)
+            return;
+
+        try {
+
+            // getting current datetime
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
+            Date date = new Date();
+            String datetime = dateFormat.format(date);
+
+            System.out.println("Saving game state...");
+            FileOutputStream fileOut = new FileOutputStream( datetime + ".txt");
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(tank1Obj);
+            out.writeObject(tank2Obj);
+            out.writeObject(tank1);
+            out.writeObject(tank2);
+            out.writeObject(groundObj);
+            out.close();
+            fileOut.close();
+            System.out.printf("Serialized data is saved in game_state.ser");
+        } catch (IOException i) {
+            i.printStackTrace();
+        }
+
+        game.save_state = false;
     }
 
     @Override

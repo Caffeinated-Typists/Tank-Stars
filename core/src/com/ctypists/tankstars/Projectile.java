@@ -4,8 +4,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.physics.box2d.*;
 
-public class Projectile {
+import java.io.Serializable;
 
+public class Projectile{
     private Body projectile;
     private final World world;
     private final Sprite projectileSprite;

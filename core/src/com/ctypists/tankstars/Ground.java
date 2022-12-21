@@ -159,4 +159,15 @@ class GroundCol{
 
     }
 
+
+    public boolean equals(Object obj) {
+        if (obj instanceof Ground) {
+            Ground ground = (Ground) obj;
+            return ground.getGroundHeights().equals(this.groundHeights);
+        }
+        return false;
+
+    }
+
+
 }

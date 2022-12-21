@@ -287,8 +287,8 @@ public class GameScreen implements Screen {
         gameStage.draw();
         gameStage.act();
 //        Comment or uncomment this line to see the polygons
-        debugRenderer.render(world, camera.combined);
-//        save_game();
+//        debugRenderer.render(world, camera.combined);
+        save_game();
     }
 
     private void stepWorld(){

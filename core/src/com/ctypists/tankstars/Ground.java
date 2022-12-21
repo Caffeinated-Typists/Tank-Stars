@@ -80,7 +80,7 @@ public class Ground implements Serializable {
 //            groundSprite.setSize(0.005f, groundHeights.get(i)*2.4f);
 //            groundSprite.setOriginCenter();
 //            groundCol.setUserData(this);
-            GroundCol groundCol = new GroundCol(world, groundPos.get(i), groundHeights.get(i), this);
+            GroundCol groundCol = new GroundCol(world, i, groundPos.get(i), groundHeights.get(i), this);
             this.groundCols.add(groundCol);
 //            groundColShape.dispose();
         }
@@ -106,7 +106,7 @@ public class Ground implements Serializable {
 //        int index = groundCols.indexOf(groundCol.getBody());
 //        for(int i = Math.max(index - damage/5, 0); i < Math.min(index + damage/5, groundHeights.size()); i++){
 //            groundHeights.set(i, groundHeights.get(i) - damage/100f);
-//            groundCols.get(i).getUserData().getSprite().setSize(0.005f, groundHeights.get(i)*2.4f);
+//            groundCols.get(i).getUserData().getSprite().setSize(0.005f, groundHeights.get(i)*2f);
 //        }
     }
 
@@ -126,9 +126,11 @@ class GroundCol{
     private final Body groundCol;
     private final Sprite groundSprite;
     private final Ground ground;
+    private final int index;
 
-    public GroundCol(World world, float x, float y, Ground ground){
+    public GroundCol(World world, int i, float x, float y, Ground ground){
         this.ground = ground;
+        this.index = i;
         BodyDef groundColDef = new BodyDef();
         groundColDef.type = BodyDef.BodyType.StaticBody;
         groundColDef.position.set(x, y - 1);
@@ -138,14 +140,14 @@ class GroundCol{
         PolygonShape groundColShape = new PolygonShape();
         groundColShape.setAsBox((float)0.005, y);
         groundColFixture.shape = groundColShape;
-        groundCol.createFixture(groundColFixture).setUserData(ground);
+        groundCol.createFixture(groundColFixture).setUserData(this);
 
         Texture groundTexture = new Texture(Gdx.files.internal("ground.png"));
         groundTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         groundSprite = new Sprite(groundTexture);
-        groundSprite.setSize(0.005f, y*2.4f);
+        groundSprite.setSize(0.005f, y*2f);
         groundSprite.setOriginCenter();
-        groundCol.setUserData(ground);
+        groundCol.setUserData(this);
 
         groundColShape.dispose();
     }

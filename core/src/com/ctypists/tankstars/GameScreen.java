@@ -269,7 +269,7 @@ public class GameScreen implements Screen {
         batch.begin();
 
         // background
-        batch.draw(gamebackground, -1, -1, Gdx.graphics.getWidth() * scalingX, Gdx.graphics.getHeight() * scalingY);
+        batch.draw(gamebackground, -1, -1, Gdx.graphics.getWidth()*scalingX, Gdx.graphics.getHeight()*scalingY);
 
         world.getBodies(bodies);
 //        boolean print = true;

@@ -77,6 +77,7 @@ public class GameScreen implements Screen {
     private float scaleX = 672;
     private float scaleY = 310.5f;
     private Array<Body> bodies;
+    private int p1_tank, p2_tank;
 
     private HashMap<Integer, String> tankMapping;
     private State state = State.RUN;
@@ -86,6 +87,8 @@ public class GameScreen implements Screen {
 
     public GameScreen(TankStars game, int p1_tank, int p2_tank) {
         this.game = game;
+        this.p1_tank = p1_tank;
+        this.p2_tank = p2_tank;
 
         batch = new SpriteBatch();
         camera = new OrthographicCamera(Gdx.graphics.getWidth()/672f, Gdx.graphics.getHeight()/310.5f);
@@ -226,6 +229,11 @@ public class GameScreen implements Screen {
 ////            tank1.applyForceToCenter(0, -1, true);
 ////        }
 //
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+            save_game();
+            game.setScreen(new PauseMenuAlt(game, this));
+        }
+
         if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
             if(this.playerTurn){
                 tank2Obj.fire(50, 60);
@@ -295,8 +303,8 @@ public class GameScreen implements Screen {
 
     public void save_game(){
         // serializes the game state
-        if (!game.save_state)
-            return;
+//        if (!game.save_state)
+//            return;
 
         try {
 
@@ -308,11 +316,9 @@ public class GameScreen implements Screen {
             System.out.println("Saving game state...");
             FileOutputStream fileOut = new FileOutputStream( datetime + ".txt");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(tank1Obj);
-            out.writeObject(tank2Obj);
-            out.writeObject(tank1);
-            out.writeObject(tank2);
-            out.writeObject(groundObj);
+            SaveGameObj saveGameObj = new SaveGameObj(tankMapping.get(p1_tank), tankMapping.get(p2_tank), tank1Obj.getHealth(), tank2Obj.getHealth());
+
+            out.writeObject(saveGameObj);
             out.close();
             fileOut.close();
             System.out.printf("Serialized data is saved in game_state.ser");
@@ -320,7 +326,7 @@ public class GameScreen implements Screen {
             i.printStackTrace();
         }
 
-        game.save_state = false;
+//        game.save_state = false;
     }
 
     @Override

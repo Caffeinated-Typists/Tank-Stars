@@ -25,6 +25,8 @@ public class Ground implements Serializable {
 
         for(float i = -1; i < 1; i += 0.005){
             groundPos.add(i);
+
+            // Rectangular ground
 //            if(i <= -0.9){
 //                groundHeights.add(1.4f + i);
 //            }else if(i <= -0.2){
@@ -35,11 +37,14 @@ public class Ground implements Serializable {
 //                groundHeights.add(0.3f);
 //            }else if(i <= 0.4){
 //                groundHeights.add((i + 0.2f)/2 + 0.1f);
-//            }else if(i <= 1){
+//            }else {
 //                groundHeights.add(0.4f);
 //            }
-//            groundHeights.add(0.5f + (float)Math.sin(i*4)*0.1f);
-            groundHeights.add(0.5f);
+            // Straight ground
+//            groundHeights.add(0.5f);
+
+            // Sinusoidal ground
+            groundHeights.add(0.5f + (float)Math.sin(i*4)*0.1f);
         }
 
         this.createGround();
@@ -62,10 +67,11 @@ public class Ground implements Serializable {
             Texture groundTexture = new Texture(Gdx.files.internal("ground.png"));
             groundTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
             groundSprite = new Sprite(groundTexture);
-            groundSprite.setSize(0.005f, 1f);
+            groundSprite.setSize(0.005f, groundHeights.get(i)*2f);
 //                groundSprite.setOrigin(groundSprite.getWidth() / 2, groundSprite.getHeight() / 2);
             groundSprite.setOriginCenter();
             groundCol.setUserData(groundSprite);
+
 
             this.groundCols.add(groundCol);
             groundColShape.dispose();
